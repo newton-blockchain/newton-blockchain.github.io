@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NEWTON Blockchain</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <style>
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 70px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+            font-size: 36px;
+            margin-top: 60px;
+            margin-bottom: 40px;
+        }
+
+        .items-container {
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .item {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 35px;
+        }
+
+        .item-img {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            margin-right: 10px;
+            margin-top: -10px;
+        }
+
+        .item-text {
+            line-height: 24px;
+        }
+
+        .item-title {
+            font-weight: bold;
+        }
+
+        .item-h {
+            font-size: 23px;
+            color: #0088cc;
+            margin-bottom: 10px;
+        }
+
+        .users-container {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 600px;
+            overflow: auto;
+        }
+
+        .user-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            float: left;
+            margin-bottom: 20px;
+            margin-right: 40px;
+        }
+
+        .user-ava {
+            width: 48px;
+            height: 48px;
+            background-image: url("https://avatars0.githubusercontent.com/u/2539335?s=96&v=4");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            margin-right: 10px;
+        }
+
+        .user-name {
+            color: #0088cc;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+
+<div style="text-align: center; padding-bottom: 60px; padding-top: 60px">
+    <h1 style="font-size: 64px">NEWTON</h1>
+    <div style="font-size: 24px; margin-top: -40px">BLOCKCHAIN</div>
+</div>
+
+<h3 style="padding-bottom: 10px; font-size: 24px; font-weight: normal">
+    Completion of the TON project by open source community.
+</h3>
+
+<div style="text-align: center; padding-bottom: 100px;">
+    <img src="screen.jpg" style="max-width: 700px; width: 100%; border-radius: 10px" alt="Attach Grams">
+</div>
+
+<div class="items-container">
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/speed.png')"></div>
+        <div class="item-text">
+            <span class="item-title">Speed and scalability</span> that allows for processing millions of transactions per second and accommodating hundreds of millions of active users and millions of applications.
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/ui.png')"></div>
+        <div class="item-text">
+            <span class="item-title">Intuitive user interfaces</span> that enable an average user to easily buy, store, and transfer value, as well as use decentralized apps in a natural way.
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/users.png')"></div>
+        <div class="item-text">
+            <span class="item-title">Integration with Telegram Apps</span> with potential involvement of 400 million active users as the critical mass necessary for the ecosystem to grow.
+        </div>
+    </div>
+</div>
+
+<h3>Blockchain</h3>
+
+<div class="items-container">
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/sharding.png')"></div>
+        <div class="item-text">
+            <div class="item-h">Infinite Sharding Paradigm</div>
+            <div>To achieve scalability, TON has built-in support for sharding: TON blockchains can automatically split and merge to accommodate changes in load. This means that new blocks are always generated quickly and the absence of long queues helps keep transaction costs low, even if some of the services using the platform become massively popular.</div>
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/hypercube.png')"></div>
+        <div class="item-text">
+            <div class="item-h">Instant Hypercube Routing</div>
+            <div>TON blockchains use smart routing mechanisms to ensure that transactions between any two blockchains will always be processed swiftly, regardless of the size of the system. The time needed to pass information between TON blockchains grows logarithmically with their number, so scaling to even millions of chains will allow them all to communicate at top speed.</div>
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/proof.png')"></div>
+        <div class="item-text">
+            <div class="item-h">Proof-of-Stake Approach</div>
+            <div>TON uses a Proof-of-Stake approach in which processing nodes («validators») deposit stakes to guarantee their dependability and reach consensus through a variant of the Byzantine Fault Tolerant protocol. This allows TON to focus the computing power of its nodes on handling transactions and smart contracts, further increasing speed and efficiency.</div>
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/2d.png')"></div>
+        <div class="item-text">
+            <div class="item-h">2-D Distributed Ledgers</div>
+            <div>TON can «grow» new valid blocks on top of any blocks that were proven to be incorrect to avoid unnecessary forks. This self-healing mechanism saves resources and guarantees that valid transactions will not be discarded due to unrelated errors.</div>
+        </div>
+    </div>
+</div>
+
+<h3>Platform</h3>
+
+<div class="items-container">
+
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/proxy.png')"></div>
+        <div class="item-text">
+            <div class="item-h">TON Proxy</div>
+            <div>TON Proxy is a network proxy/anonymizer layer used to hide the identity and IP addresses of TON nodes. Similar to I2P (Invisible Internet Project), this layer can be used to create decentralized VPN services and blockchain-based TOR alternatives to achieve anonymity and protect online privacy. In conjunction with the TON P2P Network and TON DNS, TON Proxy can make any service, including Telegram, effectively immune to censorship.</div>
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/services.png')"></div>
+        <div class="item-text">
+            <div class="item-h">TON Services</div>
+            <div>TON Services provides a platform for third-party services of any kind that enables smartphone-like friendly interfaces for decentralized apps and smart contracts, as well as a World Wide Web-like decentralized browsing experience.</div>
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/dns.png')"></div>
+        <div class="item-text">
+            <div class="item-h">TON DNS</div>
+            <div>TON DNS is a service for assigning human-readable names to accounts, smart contracts, services, and network nodes. With TON DNS, accessing decentralized services can be similar to viewing a website on the World Wide Web.</div>
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/payments.png')"></div>
+        <div class="item-text">
+            <div class="item-h">TON Payments</div>
+            <div>TON Payments is a platform for micropayments and a micropayment channel network. It can be used for instant off-chain value transfers between users, bots, and other services. Safeguards built into the system ensure that these transfers are as secure as on-chain transactions.</div>
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="item-img" style="background-image: url('icons/storage.png')"></div>
+        <div class="item-text">
+            <div class="item-h">TON Storage</div>
+            <div>TON Storage is a distributed file-storage technology, accessible through the TON P2P Network and available for storing arbitrary files, with torrent-like access technology and smart contracts used to enforce availability. This component not only enables storage services akin to a distributed Dropbox, but also paves the way for more complex decentralized apps that require storing large amounts of data, such as Youtube — or Telegram.</div>
+        </div>
+    </div>
+
+</div>
+
+<h3>Integration With Telegram Apps</h3>
+
+<div class="users-container" style="margin-bottom: 40px">
+    <p class="item-text">
+        The MTProto protocol and Telegram Messenger applications are open source.
+    </p>
+    <p class="item-text">
+        Among the members of the community there are experts well versed in Telegram technology: winners of Telegram Contests and developers of popular Telegram bots.
+    </p>
+
+    <p class="item-text">
+        The Newton project intends to create branches of Telegram application  (like Telegram X) with built-in wallets, transferring of grams and other blockchain functionality and supporting them up to date.
+    </p>
+</div>
+
+<h3>Community</h3>
+
+<div class="users-container" style="margin-bottom: 40px">
+    <p class="item-text">
+      The community consists of developers, TON Blockchain Contests winners, validators and decentralized technology enthusiasts.
+    </p>
+    <p class="item-text">
+        Members of the community are located in different parts of the world, do not belong to any commercial organization, and share the principles of open source software.
+    </p>
+    <p class="item-text">
+        There are no former or current Telegram employees in the community.
+    </p>
+</div>
+
+<div class="users-container">
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+    <div class="user-item">
+        <div class="user-ava"></div>
+        <div class="user-name">Name</div>
+    </div>
+</div>
+
+</body>
+</html>
