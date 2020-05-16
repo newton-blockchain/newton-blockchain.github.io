@@ -1,0 +1,63 @@
+{
+  "liteservers": [
+    {
+      "ip": -1184901787,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "kvGSaTit3Qs/Gsn+vFfRSNsRLc1R752sPTBWZu5rPQc="
+      },
+      "port": "46732"
+    }
+  ],
+  "dht": {
+    "a": 3,
+    "k": 3,
+    "static_nodes": {
+      "nodes": [
+        {
+          "signature": "vPSiIoy4lluPdl4EY462xZ95zc1y1XzfI+ct9s5aNRAAW0SX/3l4mnn2/kAID9HCkWLJxge50EcYDUfJjHC0Bg==",
+          "version": -1,
+          "addr_list": {
+            "priority": 0,
+            "version": 0,
+            "addrs": [
+              {
+                "ip": -1184901787,
+                "@type": "adnl.address.udp",
+                "port": 6302
+              }
+            ],
+            "@type": "adnl.addressList",
+            "expire_at": 0,
+            "reinit_date": 0
+          },
+          "@type": "dht.node",
+          "id": {
+            "@type": "pub.ed25519",
+            "key": "Kcp2xQ9LnY3/cWSTVDwEDmIY21rzsNTlSRGXzxNMS40="
+          }
+        }
+      ],
+      "@type": "dht.nodes"
+    },
+    "@type": "dht.config.global"
+  },
+  "@type": "config.global",
+  "validator": {
+    "zero_state": {
+      "file_hash": "Avb6MaOg5wCcQgzoiWwnhskXsqLK+zKzLoGwF12l/cQ=",
+      "seqno": 0,
+      "root_hash": "6xdTQn7/5cLGiFRyFfFm1WgWDoBhihMc+4DkLyF8lk0=",
+      "workchain": -1,
+      "shard": -9223372036854775808
+    },
+    "@type": "validator.config.global",
+    "init_block": {
+      "file_hash": "Avb6MaOg5wCcQgzoiWwnhskXsqLK+zKzLoGwF12l/cQ=",
+      "seqno": 0,
+      "root_hash": "6xdTQn7/5cLGiFRyFfFm1WgWDoBhihMc+4DkLyF8lk0=",
+      "workchain": -1,
+      "shard": -9223372036854775808
+    }
+  }
+}
