@@ -71,14 +71,14 @@
           "@type": "dht.node",
           "id": {
             "@type": "pub.ed25519",
-            "key": "8OEViUdN6vQLvtkzLzLQu8QOpoudZDd/S2pF5xdATYU="
+            "key": "3UOZtbL/dcU/nEzYRgElkTGsDQLPbXXHOr/kgK1xkLI="
           },
           "addr_list": {
             "@type": "adnl.addressList",
             "addrs": [
               {
                 "@type": "adnl.address.udp",
-                "ip": 0,
+                "ip": 1503907573,
                 "port": 7777
               }
             ],
@@ -88,7 +88,7 @@
             "expire_at": 0
           },
           "version": -1,
-          "signature": "ALVbj35HPm+3Y8IT9wLM4Z3iOrZxrx/1m2Ye+hz6HVlAPefPfRhAXfkkQnDqZcbb8RnGQ7FjbuMFYA27m1mlCg=="
+          "signature": "91XntkEYUalavTKrLZlwePyoVpa7xCUJO2eRbowrBmL1Ry8fYlGVta5senjLJO0qhiunA5iPXj0LG7pwmiH8AQ=="
         },
         {
           "@type": "dht.node",
