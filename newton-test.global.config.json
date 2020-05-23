@@ -158,6 +158,75 @@
           },
           "version": -1,
           "signature": "tBoPyAfgGG9jkrwUBBvlsb+0msYNoo8+GIQZcj1FrEgb9oMuvJtatgXt5Z5FzlO+TAaRfuvcE4eTV/XVeDJODg=="
+        },
+        {
+          "@type": "dht.node",
+          "id": {
+            "@type": "pub.ed25519",
+            "key": "mBjdPmzbV0CGV5qR1HkC3zMh06L970len0NlS8ehNvQ="
+          },
+          "addr_list": {
+            "@type": "adnl.addressList",
+            "addrs": [
+              {
+                "@type": "adnl.address.udp",
+                "ip": -1129967053,
+                "port": 7777
+              }
+            ],
+            "version": 0,
+            "reinit_date": 0,
+            "priority": 0,
+            "expire_at": 0
+          },
+          "version": -1,
+          "signature": "Ymx5q2wUNX/urXYb0oFn5nZxueXvRL+cZ+Jxu0YkV635vHifg3vuxhHg00cXhvIGR61rKQgHod/B91NlpjtPCQ=="
+        },
+        {
+          "@type": "dht.node",
+          "id": {
+            "@type": "pub.ed25519",
+            "key": "YNyehiFmPjwzcAvcDxaMk+Poxoa6KR+Vr2/q5eglN64="
+          },
+          "addr_list": {
+            "@type": "adnl.addressList",
+            "addrs": [
+              {
+                "@type": "adnl.address.udp",
+                "ip": -1488517624,
+                "port": 7777
+              }
+            ],
+            "version": 0,
+            "reinit_date": 0,
+            "priority": 0,
+            "expire_at": 0
+          },
+          "version": -1,
+          "signature": "Pq/idhlMkmuVmMHsNK0B0Kl0frPkJqch/f84Djyud8HETY57nWstkyIbhcij4qR07k8SpEX5djE6/oLFmmP2BA=="
+        },
+        {
+          "@type": "dht.node",
+          "id": {
+            "@type": "pub.ed25519",
+            "key": "3+z0ZkNqQRiTvmNfNf3pzwNGQDE/088j4OPMwyP67VA="
+          },
+          "addr_list": {
+            "@type": "adnl.addressList",
+            "addrs": [
+              {
+                "@type": "adnl.address.udp",
+                "ip": -1481890199,
+                "port": 7777
+              }
+            ],
+            "version": 0,
+            "reinit_date": 0,
+            "priority": 0,
+            "expire_at": 0
+          },
+          "version": -1,
+          "signature": "7faosdgMxTMpkXHrQC3StvadRNd7NmmVWolkD1sZffV5NAmChnMn9g+iWpMUTGqwLqS44/8L3+W26uoP2gmHDw=="
         }
       ],
       "@type": "dht.nodes"
