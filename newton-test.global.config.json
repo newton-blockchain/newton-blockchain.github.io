@@ -135,6 +135,29 @@
           },
           "version": -1,
           "signature": "WngwtYGYrGHC250TirB3IEP3yR2Ih5T6H0HEhhPLB+zS25wx/XUowYmbXtl0k3YcG3cPSUfsXmBQjQfsOd+kAA=="
+        },
+        {
+          "@type": "dht.node",
+          "id": {
+            "@type": "pub.ed25519",
+            "key": "zWOEe6Ij7MVqG4BFO5ubcFpcdXohV64lmvkb2GdqKOM="
+          },
+          "addr_list": {
+            "@type": "adnl.addressList",
+            "addrs": [
+              {
+                "@type": "adnl.address.udp",
+                "ip": 780978632,
+                "port": 12375
+              }
+            ],
+            "version": 0,
+            "reinit_date": 0,
+            "priority": 0,
+            "expire_at": 0
+          },
+          "version": -1,
+          "signature": "tBoPyAfgGG9jkrwUBBvlsb+0msYNoo8+GIQZcj1FrEgb9oMuvJtatgXt5Z5FzlO+TAaRfuvcE4eTV/XVeDJODg=="
         }
       ],
       "@type": "dht.nodes"
