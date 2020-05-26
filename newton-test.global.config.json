@@ -242,6 +242,22 @@
         "key": "kvGSaTit3Qs/Gsn+vFfRSNsRLc1R752sPTBWZu5rPQc="
       },
       "port": "46732"
+    },
+    {
+      "ip": 1041007544,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "c7kRVvQ+QKX+WAvJ2xWkQrTawUl0GhOfTk5Wmcz9TiY="
+      },
+      "port": "34871"
+    },
+    {
+      "ip": 780978632,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "G+v0c+sGukf17kqqbXBIJASAdXaXwcw4i2+s1kTi6eE="
+      },
+      "port": "38754"
     }
   ]
 }
