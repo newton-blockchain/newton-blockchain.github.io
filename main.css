@@ -1,0 +1,23 @@
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 30px;
+}
+
+h1 {
+    text-align: center;
+}
+
+h3 {
+    color: #222;
+    text-align: center;
+    font-size: 36px;
+    margin-top: 60px;
+    margin-bottom: 40px;
+}

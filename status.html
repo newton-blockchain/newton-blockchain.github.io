@@ -1,73 +1,157 @@
 <html>
-  <head>
-    <title> Newton network health status</title>
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <title>NEWTON Status</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+</head>
+
+<link rel="stylesheet" href="main.css">
+
 <style>
-  .green {
-    color:green;
-    font-weight: 900;
-  }
-  .red {
-    color:red;
-  }
-  .mono {
-    font-family: monospace;
-  }
+    .note {
+        margin-top: 100px;
+        color: #aaa;
+    }
+
+    table {
+        color: #444;
+    }
+
+    .grey {
+        /*color: #f38020;*/
+        color: #aaa;
+        font-weight: 900;
+    }
+
+    .green {
+        color: #46a46c;
+        font-weight: 900;
+    }
+
+    .red {
+        color: #CD4C47;
+        font-weight: 900;
+    }
+
+    .mono {
+        font-family: monospace;
+        font-size: 14px;
+        color: #0088cc;
+    }
+
+    th, td {
+        text-align: left;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    th {
+        padding-bottom: 10px;
+        color: #444;
+    }
+
+    .td-right {
+        text-align: right;
+    }
 </style>
-  <body>
-    <center>
-      <h1>Newton network validator stats</h1>
-      <h3>Note: data on this page is self reported by validators. It can be forged and must not be trusted.</h3>
-      <table id="validator-table">
-        
-      </table>
-    </center>
-  <script>
-  
+<body>
+<center>
+    <h1 style="margin-top: 50px; margin-bottom: 100px">NEWTON Validators Status</h1>
 
-  function updateTable (data) {
-    var table = document.getElementById('validator-table');
-    var tableInnerHTML= "";
-    tableInnerHTML = `<tr> 
-                          <th>Validator ADNL</th> 
-                          <th>Weight %</th>
-                          <th>Status</th>
-                          <th>Lag (sec)</th>
-                          <th>CPU load</th>
-                        </tr>`;
-    let weight_sum = 0;
-    for(r of data.current) {
-      weight_sum += r.weight;
-    }
+    <table id="validator-table">
 
-    for(r of data.current) {
-      tableInnerHTML +="\n<tr>";
-      tableInnerHTML +="<td class='mono'>"+r.adnlAddr+"</td>";
-      tableInnerHTML +="<td>"+(r.weight/weight_sum*100).toFixed(3)+"%</td>";
-      if(r.stats){
-        if(r.stats.validatorStatus.lag<3) {
-          tableInnerHTML +="<td class='green'>Working</td>";
-        } else {
-          tableInnerHTML +="<td class='red'>Issues</td>";
+    </table>
+
+    <div class="note">Note: data on this page is self reported by validators. It can be forged and must not be
+        trusted.
+    </div>
+
+    <div style="text-align: center; margin-top: 100px">
+        <img src="logo.png" style="width: 32px; pointer-events: none">
+    </div>
+
+</center>
+<script>
+
+
+
+
+    function updateTable(data) {
+        var table = document.getElementById('validator-table');
+        var tableInnerHTML = "";
+
+        function addTr(status, statusClass, addr, weight, lag, cpuLoad) {
+            tableInnerHTML += "<tr>";
+            tableInnerHTML += `<td class='${statusClass}'>${status}</td>`
+            tableInnerHTML += `<td class="mono">${addr}</td>`
+            tableInnerHTML += `<td class="td-right">${weight}</td>`
+            tableInnerHTML += `<td class="td-right">${lag}</td>`
+            tableInnerHTML += `<td class="td-right">${cpuLoad}</td>`
+            tableInnerHTML += "</tr>";
         }
-        tableInnerHTML +="<td>"+r.stats.validatorStatus.lag.toFixed(3)+"</td>";
-        tableInnerHTML +="<td>"+r.stats.cpuLoad[0]+" / "+r.stats.cpuLoad[1]+" / "+r.stats.cpuLoad[2]+"</td>";
-      } else {
-        tableInnerHTML +="<td>Not reported</td><td></td><td></td>";
-      }
-      tableInnerHTML +="</tr>";
+
+        tableInnerHTML = `<tr>
+                          <th>Status</th>
+                          <th>Validator ADNL</th>
+                          <th class="td-right">Weight, %</th>
+                          <th class="td-right">Lag, sec</th>
+                          <th class="td-right">CPU load</th>
+                        </tr>`;
+
+        let weight_sum = 0;
+        for (r of data.current) {
+            weight_sum += r.weight;
+        }
+
+        for (r of data.current) {
+
+            let status;
+            let statusClass;
+            let lag = '-';
+            let cpuLoad = '-';
+
+            if (r.stats) {
+                if (r.stats.validatorStatus.lag < 3) {
+                    status = 'Working';
+                    statusClass = 'green';
+                } else {
+                    status = 'Issues';
+                    statusClass = 'red';
+                }
+                lag =  r.stats.validatorStatus.lag.toFixed(3);
+                cpuLoad = r.stats.cpuLoad[0] + " / " + r.stats.cpuLoad[1] + " / " + r.stats.cpuLoad[2];
+            } else {
+                status = 'Not reported';
+                statusClass = 'grey';
+            }
+
+            const weight = (r.weight / weight_sum * 100).toFixed(3) + " %";
+
+            addTr(status, statusClass, r.adnlAddr, weight, lag, cpuLoad);
+        }
+        table.innerHTML = tableInnerHTML;
+    };
+
+    function update() {
+        var oReq = new XMLHttpRequest();
+        oReq.addEventListener("load", data => {
+            console.log(data);
+            updateTable(JSON.parse(data.target.responseText));
+        });
+        oReq.open("GET", "https://toncenter.com/api/newton_test/status/network_health");
+        oReq.send();
     }
-    table.innerHTML = tableInnerHTML;
-  };
-  function update() {    
-    var oReq = new XMLHttpRequest();
-    oReq.addEventListener("load", data => {console.log(data);updateTable(JSON.parse(data.target.responseText));});
-    oReq.open("GET", "https://toncenter.com/api/newton_test/status/network_health");
-    oReq.send();  
-  }
-  update();
-  setInterval(30000, update);
-  </script>
-  
-  </body>
+
+    update();
+    setInterval(30000, update);
+</script>
+
+</body>
 </html>
