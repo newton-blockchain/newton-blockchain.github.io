@@ -118,7 +118,7 @@
             let cpuLoad = '-';
 
             if (r.stats) {
-                if (r.stats.validatorStatus.lag < 3) {
+                if (r.stats.validatorStatus.lag < 45) {
                     status = 'Working';
                     statusClass = 'green';
                 } else {
