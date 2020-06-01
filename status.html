@@ -118,14 +118,19 @@
             let cpuLoad = '-';
 
             if (r.stats) {
-                if (r.stats.validatorStatus.lag < 45) {
-                    status = 'Working';
-                    statusClass = 'green';
-                } else {
+                if(!r.stats.validatorStatus.isWorking){
                     status = 'Issues';
                     statusClass = 'red';
+                } else {
+                    if (r.stats.validatorStatus.lag < 45) {
+                        status = 'Working';
+                        statusClass = 'green';
+                    } else {
+                        status = 'Issues';
+                        statusClass = 'red';
+                    }
+                    lag =  r.stats.validatorStatus.lag.toFixed(3);
                 }
-                lag =  r.stats.validatorStatus.lag.toFixed(3);
                 cpuLoad = r.stats.cpuLoad[0] + " / " + r.stats.cpuLoad[1] + " / " + r.stats.cpuLoad[2];
             } else {
                 status = 'Not reported';
