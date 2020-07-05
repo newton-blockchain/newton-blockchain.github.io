@@ -4,9 +4,9 @@
             "ip": 1041007544,
             "id": {
                 "@type": "pub.ed25519",
-                "key": "Fa/jtO9pVQNO/TKGrYVxtx6r7PxarxFVVE8eIRHS8QY="
+                "key": "BSbgk2zCaBS+34jnH4FNRz50YYsHgCZXB51RSeDHl2M="
             },
-            "port": "38001"
+            "port": "39001"
         }
     ],
     "dht": {
@@ -15,7 +15,7 @@
         "static_nodes": {
             "nodes": [
                 {
-                    "signature": "71ogSAg+36QKJKpAJRIRLcd3MNVbj8NA5xzQOmVQiNSCwzAhXSqpGrpWl9BS+IWo/xzU6ouhzpw9AvrSAwnDBQ==",
+                    "signature": "BTJAkEimD/36OMmPeXqvlAc9nBcdMPLiMXfzThVOJ/VxzCur1v/d5vYgSyDf1a82uO5ICAB7+3T13lsIBngMCg==",
                     "version": -1,
                     "addr_list": {
                         "priority": 0,
@@ -34,14 +34,14 @@
                     "@type": "dht.node",
                     "id": {
                         "@type": "pub.ed25519",
-                        "key": "kHW0Bf+BYSaxssVi4XcU16mxyoywE6SaGeEsZpoyApQ="
+                        "key": "U0Eb8KLJ5jpqHehk2/Ily9/7Ko3emK9b270+ch8avgg="
                     }
                 },
                 {
                     "@type": "dht.node",
                     "id": {
                         "@type": "pub.ed25519",
-                        "key": "xaOhOPatOrrJwkLP8mAlHYaj3aNWeFa2VrPFlBnxXGQ="
+                        "key": "oxAP/zWYr7unqW/bRKoij2doyEQSAqZl8HObU3w3K5I="
                     },
                     "addr_list": {
                         "@type": "adnl.addressList",
@@ -49,7 +49,7 @@
                             {
                                 "@type": "adnl.address.udp",
                                 "ip": 1041007544,
-                                "port": 28001
+                                "port": 29001
                             }
                         ],
                         "version": 0,
@@ -58,13 +58,13 @@
                         "expire_at": 0
                     },
                     "version": -1,
-                    "signature": "UvdSMCzPACoNy6fb6jVOA4Z+78EqfBZuSL3GPsZMqqFkpTx3sDME6ysg4M8fzmrzGEeI5W8FaGGbdBGqB0PfBg=="
+                    "signature": "AjYStiXVcalK66kIgql/XeWjPE6vluZ5Gd3UZQS7VluVXHBjQy8v3H0QIL5Nq9WtCrAImJyOiTFJ+zAhnuDrAw=="
                 },
                 {
                     "@type": "dht.node",
                     "id": {
                         "@type": "pub.ed25519",
-                        "key": "RK/7GHs9RpO2LiLw20/pBuBFySosy0yuWIdo0UWLn3U="
+                        "key": "/BjkOQ+Qf7PbjatE63BguS+kIBqfyiA/WEXlYqULztY="
                     },
                     "addr_list": {
                         "@type": "adnl.addressList",
@@ -72,7 +72,7 @@
                             {
                                 "@type": "adnl.address.udp",
                                 "ip": 780978632,
-                                "port": 28001
+                                "port": 29001
                             }
                         ],
                         "version": 0,
@@ -81,7 +81,7 @@
                         "expire_at": 0
                     },
                     "version": -1,
-                    "signature": "8LafQAhrVmLN/kAC0F+nGglWdWjjX4IKOLCW/1AEy/fmQ+njOOc3um4itWYhy8ltoD8yrb2/8V35JhIBg9pqAg=="
+                    "signature": "6YW9U0MOoixmmtL0EnmSFtRZPgBYQGESfKlIVm/9UfsZAonKjcaCVO83WIkiv472jDABngJCVGWMSExY5w6gBA=="
                 }
             ],
             "@type": "dht.nodes"
@@ -91,17 +91,17 @@
     "@type": "config.global",
     "validator": {
         "zero_state": {
-            "file_hash": "YO5l8Utby7t6sjZ1Fmru/6UYVlGVrKjJULVKxuRBW/4=",
+            "file_hash": "eE/iwWzRk7yOJNF9Pmr0XiTiKTYXSyx35dGZeuyY4Ec=",
             "seqno": 0,
-            "root_hash": "Bie6bEZKYqmzy5PzLEaY2iwUVo0K8yKRoO1T1ViEOTs=",
+            "root_hash": "XYLehzayAQFanSskT3AZaQJvz1bMslN6B1xSyt+7bxA=",
             "workchain": -1,
             "shard": -9223372036854775808
         },
         "@type": "validator.config.global",
         "init_block": {
-            "file_hash": "YO5l8Utby7t6sjZ1Fmru/6UYVlGVrKjJULVKxuRBW/4=",
+            "file_hash": "eE/iwWzRk7yOJNF9Pmr0XiTiKTYXSyx35dGZeuyY4Ec=",
             "seqno": 0,
-            "root_hash": "Bie6bEZKYqmzy5PzLEaY2iwUVo0K8yKRoO1T1ViEOTs=",
+            "root_hash": "XYLehzayAQFanSskT3AZaQJvz1bMslN6B1xSyt+7bxA=",
             "workchain": -1,
             "shard": -9223372036854775808
         }
