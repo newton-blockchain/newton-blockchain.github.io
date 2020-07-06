@@ -1,10 +1,10 @@
 {
     "liteservers": [
         {
-            "ip": 1041007544,
+            "ip": 780978632,
             "id": {
                 "@type": "pub.ed25519",
-                "key": "BSbgk2zCaBS+34jnH4FNRz50YYsHgCZXB51RSeDHl2M="
+                "key": "hNgRuQS+lV2NjjB887kMRn2grn3qicdCZE+jmb2sU8w="
             },
             "port": "39001"
         }
