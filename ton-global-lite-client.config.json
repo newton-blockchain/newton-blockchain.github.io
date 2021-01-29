@@ -125,6 +125,16 @@
       ]
     }
   },
+  "liteservers": [
+    {
+      "ip": 1137658550,
+      "port": 4924,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "peJTw/arlRfssgTuf9BMypJzqOi7SXEqSPSWiEw2U1M="
+      }
+    }
+  ],
   "validator": {
     "@type": "validator.config.global",
     "zero_state": {
