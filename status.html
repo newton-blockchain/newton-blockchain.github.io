@@ -19,6 +19,7 @@
 
     table {
         color: #444;
+        font-size: 12px;
     }
 
     .grey {
@@ -39,7 +40,7 @@
 
     .mono {
         font-family: monospace;
-        font-size: 14px;
+        font-size: 12px;
         color: #0088cc;
     }
 
@@ -84,25 +85,38 @@
 
 
     function updateTable(data) {
+        console.log(data);
+
         var table = document.getElementById('validator-table');
         var tableInnerHTML = "";
 
-        function addTr(status, statusClass, addr, weight, lag, cpuLoad) {
+        function addTr(status, statusClass, addr, weight, stake, lag, cpuLoad, tonRevision, mytonctrlRevision) {
             tableInnerHTML += "<tr>";
             tableInnerHTML += `<td class='${statusClass}'>${status}</td>`
             tableInnerHTML += `<td class="mono">${addr}</td>`
             tableInnerHTML += `<td class="td-right">${weight}</td>`
+            tableInnerHTML += `<td class="td-right">${stake}</td>`
             tableInnerHTML += `<td class="td-right">${lag}</td>`
             tableInnerHTML += `<td class="td-right">${cpuLoad}</td>`
+            tableInnerHTML += `<td class="td-right">${tonRevision}</td>`
+            tableInnerHTML += `<td class="td-right">${mytonctrlRevision}</td>`
             tableInnerHTML += "</tr>";
+        }
+
+        function formatRevision(rev) {
+            if (!rev) return '-';
+            return rev.substring(0, 6);
         }
 
         tableInnerHTML = `<tr>
                           <th>Status</th>
                           <th>Validator ADNL</th>
                           <th class="td-right">Weight, %</th>
+                          <th class="td-right">Stake</th>
                           <th class="td-right">Lag, sec</th>
                           <th class="td-right">CPU load</th>
+                          <th class="td-right">TON rev.</th>
+                          <th class="td-right">MyTonCtrl rev.</th>
                         </tr>`;
 
         let weight_sum = 0;
@@ -111,7 +125,6 @@
         }
 
         for (r of data.current) {
-
             let status;
             let statusClass;
             let lag = '-';
@@ -139,7 +152,9 @@
 
             const weight = (r.weight / weight_sum * 100).toFixed(3) + " %";
 
-            addTr(status, statusClass, r.adnlAddr, weight, lag, cpuLoad);
+            addTr(status, statusClass, r.adnlAddr, weight, r.stats?.stake || '-', lag, cpuLoad,
+                (r.stats?.engine || '-') + ' ' + formatRevision(r.stats?.gitHashes?.validator),
+                formatRevision(r.stats?.gitHashes?.mytonctrl));
         }
         table.innerHTML = tableInnerHTML;
     };
