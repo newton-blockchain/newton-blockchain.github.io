@@ -17,6 +17,11 @@
         color: #aaa;
     }
 
+    #counts {
+        color: #444;
+        margin-bottom: 20px;
+    }
+
     table {
         color: #444;
         font-size: 12px;
@@ -66,6 +71,10 @@
 <center>
     <h1 style="margin-top: 50px; margin-bottom: 100px">Testnet2 Validators Status</h1>
 
+    <div id="counts">
+
+    </div>
+
     <table id="validator-table">
 
     </table>
@@ -80,8 +89,6 @@
 
 </center>
 <script>
-
-
 
 
     function updateTable(data) {
@@ -119,6 +126,9 @@
                           <th class="td-right">MyTonCtrl rev.</th>
                         </tr>`;
 
+        var statusToCount = {};
+        var statusToWeight = {};
+
         let weight_sum = 0;
         for (r of data.current) {
             weight_sum += r.weight;
@@ -131,7 +141,7 @@
             let cpuLoad = '-';
 
             if (r.stats) {
-                if(!r.stats.validatorStatus.isWorking){
+                if (!r.stats.validatorStatus.isWorking) {
                     status = 'Issues';
                     statusClass = 'red';
                 } else {
@@ -142,7 +152,7 @@
                         status = 'Issues';
                         statusClass = 'red';
                     }
-                    lag =  r.stats.validatorStatus.lag.toFixed(3);
+                    lag = r.stats.validatorStatus.lag.toFixed(3);
                 }
                 cpuLoad = r.stats.cpuLoad[0] + " / " + r.stats.cpuLoad[1] + " / " + r.stats.cpuLoad[2];
             } else {
@@ -150,13 +160,32 @@
                 statusClass = 'grey';
             }
 
-            const weight = (r.weight / weight_sum * 100).toFixed(3) + " %";
+            const weightNum = (r.weight / weight_sum * 100);
+            const weight = weightNum.toFixed(3) + " %";
+
+            if (!statusToCount[status]) {
+                statusToCount[status] = 0;
+            }
+            statusToCount[status]++;
+
+
+            if (!statusToWeight[status]) {
+                statusToWeight[status] = 0;
+            }
+            statusToWeight[status] += weightNum;
 
             addTr(status, statusClass, r.adnlAddr, weight, r.stats?.stake || '-', lag, cpuLoad,
                 (r.stats?.engine || '-') + ' ' + formatRevision(r.stats?.gitHashes?.validator),
                 formatRevision(r.stats?.gitHashes?.mytonctrl));
         }
         table.innerHTML = tableInnerHTML;
+
+
+        var countsInnerHTML = '';
+        for (var status in statusToCount) {
+            countsInnerHTML += status + ': ' + statusToCount[status] + ' (' + statusToWeight[status].toFixed(3) + '%) , '
+        }
+        document.getElementById('counts').innerHTML = countsInnerHTML.substr(0, countsInnerHTML.length - 2);
     };
 
     function update() {
