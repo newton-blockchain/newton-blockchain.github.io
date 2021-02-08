@@ -1,6 +1,14 @@
 {
   "liteservers": [
     {
+      "ip": -1655045702,
+      "port":24795,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "FAyvdtgqlq/DGgA+H59tow+H+BNwOLp8VvGiy53gpIU="
+      }
+    },
+    {
       "ip": 1137658550,
       "port": 4924,
       "id": {
