@@ -38,6 +38,11 @@
         font-weight: 900;
     }
 
+    .orange {
+        color: #FF8C00;
+        font-weight: 900;
+    }
+
     .red {
         color: #CD4C47;
         font-weight: 900;
@@ -97,11 +102,14 @@
         var table = document.getElementById('validator-table');
         var tableInnerHTML = "";
 
-        function addTr(status, statusClass, addr, weight, stake, lag, cpuLoad, tonRevision, mytonctrlRevision) {
+        function addTr(status, statusClass, addr, weight, efficiency, mr, wr, stake, lag, cpuLoad, tonRevision, mytonctrlRevision) {
             tableInnerHTML += "<tr>";
             tableInnerHTML += `<td class='${statusClass}'>${status}</td>`
             tableInnerHTML += `<td class="mono">${addr}</td>`
             tableInnerHTML += `<td class="td-right">${weight}</td>`
+            tableInnerHTML += `<td class="td-right">${efficiency}</td>`
+            tableInnerHTML += `<td class="td-right">${mr}</td>`
+            tableInnerHTML += `<td class="td-right">${wr}</td>`
             tableInnerHTML += `<td class="td-right">${stake}</td>`
             tableInnerHTML += `<td class="td-right">${lag}</td>`
             tableInnerHTML += `<td class="td-right">${cpuLoad}</td>`
@@ -119,6 +127,9 @@
                           <th>Status</th>
                           <th>Validator ADNL</th>
                           <th class="td-right">Weight, %</th>
+                          <th class="td-right">Efficiency, %</th>
+                          <th class="td-right">mr</th>
+                          <th class="td-right">wr</th>
                           <th class="td-right">Stake</th>
                           <th class="td-right">Lag, sec</th>
                           <th class="td-right">CPU load</th>
@@ -163,18 +174,27 @@
             const weightNum = (r.weight / weight_sum * 100);
             const weight = weightNum.toFixed(3) + " %";
 
+            efficiency = r.efficiency + " %"
+            mr = r.mr.toFixed(2)
+            wr = r.wr.toFixed(2)
+            if (r.efficiency < 30) {
+                status = 'Issues';
+                statusClass = 'red';
+            } else if (mr < 0.1 || wr < 0.1) {
+                statusClass = 'orange';
+            }
+
             if (!statusToCount[status]) {
                 statusToCount[status] = 0;
             }
             statusToCount[status]++;
-
 
             if (!statusToWeight[status]) {
                 statusToWeight[status] = 0;
             }
             statusToWeight[status] += weightNum;
 
-            addTr(status, statusClass, r.adnlAddr, weight, r.stats?.stake || '-', lag, cpuLoad,
+            addTr(status, statusClass, r.adnlAddr, weight, efficiency, mr, wr, r.stats?.stake || '-', lag, cpuLoad,
                 (r.stats?.engine || '-') + ' ' + formatRevision(r.stats?.gitHashes?.validator),
                 formatRevision(r.stats?.gitHashes?.mytonctrl));
         }
