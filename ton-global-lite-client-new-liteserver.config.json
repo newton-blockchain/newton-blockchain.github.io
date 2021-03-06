@@ -127,12 +127,12 @@
   },
   "liteservers": [
     {
-      "ip": -1655045702,
-      "port":24795,
+      "ip": 780978632,
       "id": {
         "@type": "pub.ed25519",
-        "key": "FAyvdtgqlq/DGgA+H59tow+H+BNwOLp8VvGiy53gpIU="
-      }
+        "key": "XGpw4NaJpxvSorzstWDWHUgPdLo2MivsH5MI659BgS4="
+      },
+      "port": "39001"
     }
   ],
   "validator": {
