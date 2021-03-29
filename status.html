@@ -175,9 +175,14 @@
             const weight = weightNum.toFixed(3) + " %";
 
             efficiency = r.efficiency + " %"
-            mr = r.mr.toFixed(2)
-            wr = r.wr.toFixed(2)
-            if (r.efficiency < 30) {
+            mr = 0;
+            wr = 0;
+            if(r.mr && r.wr) {
+              mr = r.mr.toFixed(2);
+              wr = r.wr.toFixed(2);
+            }
+            
+            if (r.efficiency && r.efficiency < 30) {
                 status = 'Issues';
                 statusClass = 'red';
             } else if (mr < 0.1 || wr < 0.1) {
