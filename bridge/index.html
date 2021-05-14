@@ -660,8 +660,8 @@
             alert('Amount is not valida number');
             return;
         }
-        if (amount <= 0) {
-            alert('Enter positive amount');
+        if (amount < 10) {
+            alert('Amount must be at least 10 TON');
             return;
         }
 
