@@ -17,8 +17,9 @@
             flex-direction: column;
             align-items: center;
             padding-left: 10px;
-            margin-right: 10px;
-            margin-top: 100px;
+            padding-right: 10px;
+            padding-top: 100px;
+            padding-bottom: 100px;
         }
 
         .img {
@@ -112,6 +113,7 @@
             border-radius: 8px;
             margin-top: 8px;
             margin-bottom: 20px;
+            -webkit-appearance: none;
         }
 
         #info {
@@ -188,12 +190,12 @@
 <div class="form">
     <div id="title" onclick="toggleTonToEth()">
         <div>
-            <div class="title" id="fromNetwork">TON Network</div>
+            <div class="title" id="fromNetwork">TON Testnet</div>
             <div id="fromCoin">TON Coin (Native)</div>
         </div>
         <div class="arrow"></div>
         <div>
-            <div class="title" id="toNetwork">Ethereum</div>
+            <div class="title" id="toNetwork">Ethereum Ropsten</div>
             <div id="toCoin">TONCOIN (ERC20)</div>
         </div>
     </div>
@@ -203,7 +205,7 @@
     </div>
 
     <div class="input-container">
-        <label for="toInput" id="toInputLabel">Address to receive in Ethereum Network:</label><br>
+        <label for="toInput" id="toInputLabel">Address to receive in Ethereum Ropsten:</label><br>
         <input class="input" type="text" id="toInput" value="">
     </div>
 
@@ -222,33 +224,26 @@
             <div id="icon3"></div>
             <div id="info3"></div>
         </div>
-        <button id="getWtonButton" onclick="getWtonClick()">Get TONCOIN</button>
+        <button id="getWtonButton" onclick="mint()">Get TONCOIN</button>
         <button id="doneButton" onclick="onDoneClick()">Done</button>
     </div>
 </div>
 
 <script type="text/javascript" src="tonweb-0.0.13.js"></script>
 <script type="text/javascript" src="web3.min.js"></script>
-<script type="application/javascript" src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+<script type="text/javascript" src="ethers-5.0.umd.min.js"></script>
 
 <script>
-    const IS_TESTNET = true//window.location.href.indexOf('testnet') > -1;
-
     // UTILS
-
-    const BN = TonWeb.utils.BN;
-
-    const joinSignature = window.ethers.utils.joinSignature;
-    const sha256 = window.ethers.utils.sha256;
 
     const $ = name => document.querySelector(name);
 
     function httpGet(url) {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", url, true);
+            xhr.open('GET', url, true);
             xhr.setRequestHeader('Cache-Control', 'no-store, max-age=0');
-            xhr.onload = function (e) {
+            xhr.onload = e => {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
                         resolve(xhr.responseText);
@@ -257,46 +252,29 @@
                     }
                 }
             }
-            xhr.onerror = function (e) {
+            xhr.onerror = e => {
                 reject(xhr.statusText);
             };
             xhr.send(null);
         })
     }
 
-    // BRIDGE UTILS
+    // VARIABLES
 
-    const WTON_ADDRESS = '0x2a1407A11e2B6792474E27e95269Ec0A16EC245b';
-    const TON_BRIDGE_ADDRESS = 'kf9gj99uxzzI40JMyf07i6QRtoBre9sWJ2COapiurSNT0Zop';
+    const IS_TESTNET = true//window.location.href.indexOf('testnet') > -1;
+    const WTON_ADDRESS = IS_TESTNET ? '0x2a1407A11e2B6792474E27e95269Ec0A16EC245b' : '';
+    const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'kf9gj99uxzzI40JMyf07i6QRtoBre9sWJ2COapiurSNT0Zop' : '';
+    const TONCENTER_URL = IS_TESTNET ? 'https://testnet.toncenter.com/api/v2/jsonRPC' : 'https://toncenter.com/api/v2/jsonRPC';
+    const ETH_CHAIN_ID = IS_TESTNET ? 3 : 1;
 
-    const toUnit = (n) => n * 1e9; // todo: BN
-
-    const fromUnit = (n) => n / 1e9; // todo: BN
-
-    function getSwapTonToEthId(web3, d) {
-        return Web3.utils.sha3(
-            web3.eth.abi.encodeParameters(
-                ['address', 'uint256', 'int8', 'bytes32', 'bytes32', 'uint64'],
-                [d.receiver, d.amount, d.tx.address_.workchain, d.tx.address_.address_hash, d.tx.tx_hash, d.tx.lt]
-            )
-        );
-    }
-
-    // BRIDGE
-
-    const provider = window.ethereum;
-    let myEthAddress;
-    let web3;
-    let wtonContract;
-    let tonweb;
-    let oraclesTotal = 0;
-
-    let fromNetwork;
-    let toNetwork;
-    let fromCoin;
-    let toCoin;
-    let fromCoinFull;
-    let toCoinFull;
+    let provider = null;
+    // {
+    //     myEthAddress: '',
+    //     web3: null,
+    //     wtonContract: null,
+    //     tonweb: null,
+    //     oraclesTotal: 0
+    // };
 
     let state = {
         isTonToEth: true,
@@ -311,55 +289,35 @@
         createTime: 0,
     };
 
-    const initState = () => {
-        state = {
-            isTonToEth: state.isTonToEth,
-            amount: 0,
-            toAddress: null,
-            swapId: null,
-            fromCurrencySent: false,
-            toCurrencySent: false,
-            step: 0,
-            votes: [],
-            swapData: null,
-            createTime: 0,
-        };
-        updateView();
+    // BRIDGE FUNCTIONS PURE
+
+    const BN = TonWeb.utils.BN;
+
+    const joinSignature = window.ethers.utils.joinSignature;
+    const sha256 = window.ethers.utils.sha256;
+
+    const toUnit = (n) => n * 1e9; // todo: BN
+
+    const fromUnit = (n) => n / 1e9; // todo: BN
+
+    function getSwapTonToEthId(web3, d) {
+        return Web3.utils.sha3(
+            web3.eth.abi.encodeParameters(
+                ['address', 'uint256', 'int8', 'bytes32', 'bytes32', 'uint64'],
+                [d.receiver, d.amount, d.tx.address_.workchain, d.tx.address_.address_hash, d.tx.tx_hash, d.tx.lt]
+            )
+        );
     }
 
-    const initMetamask = async () => {
-        if (!provider) {
-            alert('MetaMask not installed');
-            return false;
-        } else {
-            try {
-                const accounts = (await provider.send('eth_requestAccounts')).result;
-                myEthAddress = accounts[0]
-                console.log('address is', myEthAddress);
-            } catch (error) {
-                console.log(error);
-                return false;
-            }
-
-            provider.on('accountsChanged', function (accounts) {
-                console.log('accountsChanged', accounts);
-                myEthAddress = accounts[0];
-                console.log('address is', myEthAddress);
-            });
-
-            web3 = new Web3(provider);
-            const WTON = JSON.parse(await httpGet('WTON.json'));
-            wtonContract = new web3.eth.Contract(WTON, WTON_ADDRESS);
-            oraclesTotal = (await wtonContract.methods.getFullOracleSet().call()).length;
-
-            const mainnetRpc = 'https://toncenter.com/api/test/v2/jsonRPC';
-            const testnetRpc = 'https://testnet.toncenter.com/api/v2/jsonRPC';
-            tonweb = new TonWeb(new TonWeb.HttpProvider(IS_TESTNET ? testnetRpc : mainnetRpc));
-            return true;
-        }
+    function serializeEthToTon(ethToTon) {
+        const bits = new TonWeb.boc.BitString(8 + 256 + 8 + 256 + 64);
+        bits.writeUint(0, 8); // vote op
+        bits.writeUint(new BN(ethToTon.transactionHash.substr(2), 16), 256);
+        bits.writeUint(ethToTon.to.workchain, 8);
+        bits.writeUint(new BN(ethToTon.to.address_hash, 16), 256);
+        bits.writeUint(new BN(ethToTon.value), 64);
+        return bits.array;
     }
-
-    // GET METHODS
 
     const MIN_FEE = new BN(5 * 1e9); // 5 TON minimum fee
 
@@ -368,8 +326,9 @@
         return MIN_FEE.add(rest.mul(new BN(15)).div(new BN(100 * 100))) // 0.15% fee percent
     }
 
-    async function getSwap(myAmount, myToAddress) {
-        const transactions = await tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, 20);
+    async function getSwap(myAmount, myToAddress, myCreateTime) {
+        console.log('getTransactions');
+        const transactions = await provider.tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, 20);
         console.log('ton txs', transactions.length)
 
         const findLogOutMsg = (outMessages) => {
@@ -383,13 +342,13 @@
         for (let t of transactions) {
             const logMsg = findLogOutMsg(t.out_msgs);
             if (logMsg) {
-                if (t.utime * 1000 < state.createTime) continue;
+                if (t.utime * 1000 < myCreateTime) continue;
 
                 const message = logMsg.message.substr(0, logMsg.message.length - 1); // remove '\n' from end
                 const bytes = TonWeb.utils.base64ToBytes(message);
                 if (bytes.length !== 28) {
                     console.error('bad log message ' + logMsg)
-                    return;
+                    return null;
                 }
                 const destinationAddress = '0x' + TonWeb.utils.bytesToHex(bytes.slice(0, 20));
                 const amountHex = TonWeb.utils.bytesToHex(bytes.slice(20, 28));
@@ -451,7 +410,7 @@
     async function getEthVote(voteId) {
         console.log('getEthVote ', voteId);
 
-        const result = await tonweb.provider.call(TON_BRIDGE_ADDRESS, 'get_external_voting_data', [['num', voteId]]);
+        const result = await provider.tonweb.provider.call(TON_BRIDGE_ADDRESS, 'get_external_voting_data', [['num', voteId]]);
         if (result.exit_code === 309) {
             return null;
         }
@@ -467,7 +426,7 @@
     async function getTonVote(voteId) {
         console.log('getTonVote ', voteId);
 
-        const result = await tonweb.provider.call(TON_BRIDGE_ADDRESS, 'get_ton_voting_status', [['num', voteId]]);
+        const result = await provider.tonweb.provider.call(TON_BRIDGE_ADDRESS, 'get_ton_voting_status', [['num', voteId]]);
         if (result.exit_code === 309) {
             return null;
         }
@@ -484,7 +443,7 @@
         return status.votedOracleIds;
     }
 
-    // END OF GET METHODS
+    // VIEW
 
     setIcon = (step, currentStep) => {
         const icon = $('#icon' + step);
@@ -492,16 +451,24 @@
         icon.classList.add(currentStep === step ? 'pending' : (currentStep > step ? 'done' : 'none'));
     }
 
-    const updateView = () => {
+    function updateView() {
+
+        const TON_NETWORK = IS_TESTNET ? 'TON Testnet' : 'TON Network';
+        const ETH_NETWORK = IS_TESTNET ? 'Ethereum Ropsten' : 'Ethereum';
+        const TON_NETWORK_FULL = IS_TESTNET ? 'TON Testnet' : 'TON Network';
+        const ETH_NETWORK_FULL = IS_TESTNET ? 'Ethereum Ropsten' : 'Ethereum Network';
 
         // DIRECTION
 
-        fromNetwork = state.isTonToEth ? 'TON Network' : 'Ethereum';
-        toNetwork = !state.isTonToEth ? 'TON Network' : 'Ethereum';
-        fromCoin = state.isTonToEth ? 'TON Coin' : 'TONCOIN';
-        toCoin = !state.isTonToEth ? 'TON Coin' : 'TONCOIN';
-        fromCoinFull = state.isTonToEth ? 'TON Coin (Native)' : 'TONCOIN (ERC20)';
-        toCoinFull = !state.isTonToEth ? 'TON Coin (Native)' : 'TONCOIN (ERC20)';
+        const fromNetwork = state.isTonToEth ? TON_NETWORK : ETH_NETWORK;
+        const toNetwork = !state.isTonToEth ? TON_NETWORK : ETH_NETWORK;
+        const fromNetworkFull = state.isTonToEth ? TON_NETWORK_FULL : ETH_NETWORK_FULL;
+        const toNetworkFull = !state.isTonToEth ? TON_NETWORK_FULL : ETH_NETWORK_FULL;
+
+        const fromCoin = state.isTonToEth ? 'TON Coin' : 'TONCOIN';
+        const toCoin = !state.isTonToEth ? 'TON Coin' : 'TONCOIN';
+        const fromCoinFull = state.isTonToEth ? 'TON Coin (Native)' : 'TONCOIN (ERC20)';
+        const toCoinFull = !state.isTonToEth ? 'TON Coin (Native)' : 'TONCOIN (ERC20)';
 
         $('#fromNetwork').innerText = fromNetwork;
         $('#fromCoin').innerText = fromCoinFull;
@@ -515,7 +482,7 @@
             $('.img').classList.add('img-scale');
         }
 
-        $('#toInputLabel').innerText = 'Address to receive in ' + (state.isTonToEth ? 'Ethereum' : 'TON') + ' Network';
+        $('#toInputLabel').innerText = 'Address to receive in ' + toNetworkFull + ':';
 
         // MAIN / SWAP
 
@@ -542,7 +509,7 @@
 
                 if (state.isTonToEth) {
                     const url = 'ton://transfer/' + TON_BRIDGE_ADDRESS + '?amount=' + toUnit(state.amount) + '&text=swapTo#' + state.toAddress;
-                    $('#info1').innerHTML = `Please send ${state.amount} TON coins to bridge smart-contract<br>` +
+                    $('#info1').innerHTML = `Please send ${state.amount} ${fromCoin}s to bridge smart-contract<br>` +
                         `<a href="${url}" target="_blank">${url}</a>`;
                 } else {
 
@@ -561,7 +528,7 @@
             }
 
             if (state.step === 2) {
-                $('#info2').innerHTML = 'Collected ' + (state.votes ? state.votes.length : 0) + '/' + oraclesTotal + ' confirmations of oracles';
+                $('#info2').innerHTML = 'Collected ' + (state.votes ? state.votes.length : 0) + '/' + provider.oraclesTotal + ' confirmations of oracles';
             } else if (state.step > 2) {
                 $('#info2').innerHTML = 'The confirmations of the oracles are collected';
             } else {
@@ -571,9 +538,9 @@
             if (state.step === 3) {
 
                 if (state.isTonToEth) {
-                    $('#info3').innerHTML = state.toCurrencySent ? 'Please wait for the Ethereum transaction to be processed' : 'Get TONCOINs by metamask';
+                    $('#info3').innerHTML = state.toCurrencySent ? 'Please wait for the Ethereum transaction to be processed' : `Get ${toCoin}s by metamask`;
                 } else {
-                    $('#info3').innerHTML = 'TON Coins have been sent to your address';
+                    $('#info3').innerHTML = `${toCoin}s have been sent to your address`;
                 }
 
             } else if (state.step > 3) {
@@ -591,11 +558,111 @@
         }
     }
 
-    setInterval(async () => {
+    function toggleTonToEth() {
+        state.isTonToEth = !state.isTonToEth;
+        updateView();
+    }
+
+    // PROVIDER
+
+    async function initProvider() {
+        const ethereum = window.ethereum;
+
+        if (!ethereum) {
+            alert('MetaMask not installed');
+            return null;
+        } else {
+            let myEthAddress;
+            try {
+                const accounts = (await ethereum.send('eth_requestAccounts')).result;
+                myEthAddress = accounts[0]
+                console.log('address is', myEthAddress);
+            } catch (error) {
+                console.log(error);
+                return null;
+            }
+
+            ethereum.on('accountsChanged', function (accounts) {
+                console.log('accountsChanged', accounts);
+                provider.myEthAddress = accounts[0];
+                console.log('address is', provider.myEthAddress);
+            });
+
+            if (ethereum.networkVersion !== ETH_CHAIN_ID.toString()) {
+                alert('Set chain to ' + (ETH_CHAIN_ID === 3 ? 'Ropsten' : 'Mainnet') + ' in Metamask');
+                return null;
+            }
+
+            const web3 = new Web3(ethereum);
+            const WTON = JSON.parse(await httpGet('WTON.json'));
+            const wtonContract = new web3.eth.Contract(WTON, WTON_ADDRESS);
+            const oraclesTotal = (await wtonContract.methods.getFullOracleSet().call()).length;
+
+            if (!(oraclesTotal > 0)) {
+                return null;
+            }
+
+            const tonweb = new TonWeb(new TonWeb.HttpProvider(TONCENTER_URL));
+            return {
+                myEthAddress,
+                web3,
+                wtonContract,
+                tonweb,
+                oraclesTotal
+            };
+        }
+    }
+
+    // BRIDGE
+
+    function initState() {
+        state = {
+            isTonToEth: state.isTonToEth,
+            amount: 0,
+            toAddress: null,
+            swapId: null,
+            fromCurrencySent: false,
+            toCurrencySent: false,
+            step: 0,
+            votes: [],
+            swapData: null,
+            createTime: 0,
+        };
+        updateView();
+    }
+
+    function saveState() {
+        localStorage.setItem('state', JSON.stringify(state));
+    }
+
+    function deleteState() {
+        localStorage.removeItem('state');
+    }
+
+    async function loadState() {
+        const raw = localStorage.getItem('state');
+        if (raw) {
+            provider = await initProvider();
+            if (!provider) {
+                return;
+            }
+            state = JSON.parse(raw);
+            $('#amountInput').value = state.amount;
+            $('#toInput').value = state.toAddress;
+            updateView();
+            await updateState();
+        } else {
+            initState();
+        }
+    }
+
+    loadState();
+
+    async function updateState() {
         if (state.step === 1 && state.isTonToEth) {
-            const swap = await getSwap(state.amount, state.toAddress);
+            const swap = await getSwap(state.amount, state.toAddress, state.createTime);
             if (swap) {
-                state.swapId = getSwapTonToEthId(web3, swap);
+                state.swapId = getSwapTonToEthId(provider.web3, swap);
                 state.swapData = swap;
                 state.step = 2;
                 updateView();
@@ -604,24 +671,16 @@
         if (state.step === 2) {
             state.votes = state.isTonToEth ? await getEthVote(state.swapId) : await getTonVote(state.swapId);
             const votesLength = state.votes ? state.votes.length : 0;
-            if (votesLength >= oraclesTotal * 2 / 3) {
+            if (votesLength >= provider.oraclesTotal * 2 / 3) {
                 state.step = state.isTonToEth ? 3 : 4;
             }
             updateView();
         }
-    }, 1000);
-
-    const toggleTonToEth = () => {
-        state.isTonToEth = !state.isTonToEth;
-        updateView();
-    };
-
-    const onDoneClick = () => {
-        initState();
-        updateView();
     }
 
-    const getWtonClick = async () => {
+    setInterval(() => updateState(), 5000);
+
+    async function mint() {
         let receipt;
         try {
             const signatures = state.votes.map(v => {
@@ -633,9 +692,10 @@
 
             console.log('voteForMinting', JSON.stringify(state.swapData), JSON.stringify(signatures));
 
-            receipt = await wtonContract.methods.voteForMinting(state.swapData, signatures).send({from: myEthAddress})
+            receipt = await provider.wtonContract.methods.voteForMinting(state.swapData, signatures).send({from: provider.myEthAddress})
                 .on('transactionHash', hash => {
                     state.toCurrencySent = true;
+                    deleteState();
                     updateView();
                 });
         } catch (e) {
@@ -645,19 +705,62 @@
 
         if (receipt.status) {
             state.step = 4;
+            deleteState();
             updateView();
         } else {
             console.error('transaction fail', receipt);
         }
     }
 
-    updateView();
+    async function burn() {
+        const fromAddress = provider.myEthAddress;
+        const toAddress = state.toAddress;
+        const amount = state.amount;
+
+        const addressTon = new TonWeb.utils.Address(toAddress);
+        const wc = addressTon.wc;
+        const hashPart = TonWeb.utils.bytesToHex(addressTon.hashPart);
+        const amountUnit = toUnit(amount);
+
+        let receipt;
+
+        try {
+            receipt = await provider.wtonContract.methods.burn(amountUnit, {
+                workchain: wc,
+                address_hash: '0x' + hashPart
+            }).send({from: fromAddress})
+                .on('transactionHash', hash => {
+                    state.fromCurrencySent = true;
+                    updateView();
+                });
+        } catch (e) {
+            console.error(e);
+            initState();
+            return;
+        }
+
+        if (receipt.status) {
+            console.log('transactionHash', receipt.transactionHash);
+            state.swapId = sha256(serializeEthToTon({
+                transactionHash: receipt.transactionHash,
+                to: {
+                    workchain: wc,
+                    address_hash: hashPart
+                },
+                value: amountUnit
+            }));
+            state.step = 2;
+            updateView();
+        } else {
+            console.error('transaction fail', receipt);
+        }
+    }
 
     $("#transferButton").addEventListener('click', async () => {
         const amountString = $('#amountInput').value;
         const amount = Number(amountString);
         if (isNaN(amount)) {
-            alert('Amount is not valida number');
+            alert('Amount is not valid number');
             return;
         }
         if (amount < 10) {
@@ -667,85 +770,40 @@
 
         const toAddress = $('#toInput').value;
 
-        state.amount = amount;
-        state.toAddress = toAddress;
-
-        if (!await initMetamask()) {
-            return;
-        }
-
         if (state.isTonToEth) {
             if (!Web3.utils.isAddress(toAddress)) {
                 alert('Not valid ETH address');
                 return;
             }
-            state.createTime = Date.now();
-            state.step = 1;
-            updateView();
-
         } else {
             if (!TonWeb.utils.Address.isValid(toAddress)) {
                 alert('Not valid TON address');
                 return;
             }
-            const tonAddress = new TonWeb.utils.Address(toAddress);
-            const wc = tonAddress.wc;
-            const hashPart = TonWeb.utils.bytesToHex(tonAddress.hashPart);
-            const amountUnit = toUnit(amount);
+        }
 
-            state.step = 1;
-            updateView();
-
-            let receipt;
-            console.log('BURN', wc, hashPart, amountUnit)
-
-            try {
-                receipt = await wtonContract.methods.burn(amountUnit, {
-                    workchain: wc,
-                    address_hash: '0x' + hashPart
-                }).send({from: myEthAddress})
-                    .on('transactionHash', hash => {
-                        state.fromCurrencySent = true;
-                        updateView();
-                    });
-            } catch (e) {
-                console.error(e);
-                initState();
-                updateView();
+        if (!provider) {
+            provider = await initProvider();
+            if (!provider) {
                 return;
             }
+        }
 
-            // receipt = {
-            //     transactionHash: '0x373250c8700d8af6422344b4d8f380469098bc3e53d3306e9f93876018b9a91e',
-            //     status: 1
-            // }
+        state.amount = amount;
+        state.toAddress = toAddress;
+        state.createTime = Date.now();
+        state.step = 1;
+        updateView();
 
-            if (receipt.status) {
-                console.log('transactionHash', receipt.transactionHash);
-                state.swapId = sha256(serializeEthToTon({
-                    transactionHash: receipt.transactionHash,
-                    to: {
-                        workchain: wc,
-                        address_hash: hashPart
-                    },
-                    value: amountUnit
-                }));
-                state.step = 2;
-                updateView();
-            } else {
-                console.error('transaction fail', receipt);
-            }
+        if (state.isTonToEth) {
+            saveState();
+        } else {
+            await burn();
         }
     });
 
-    function serializeEthToTon(ethToTon) {
-        const bits = new TonWeb.boc.BitString(8 + 256 + 8 + 256 + 64);
-        bits.writeUint(0, 8); // vote op
-        bits.writeUint(new TonWeb.utils.BN(ethToTon.transactionHash.substr(2), 16), 256);
-        bits.writeUint(ethToTon.to.workchain, 8);
-        bits.writeUint(new TonWeb.utils.BN(ethToTon.to.address_hash, 16), 256);
-        bits.writeUint(new TonWeb.utils.BN(ethToTon.value), 64);
-        return bits.array;
+    function onDoneClick() {
+        initState();
     }
 </script>
 
