@@ -19,7 +19,6 @@
             padding-left: 10px;
             padding-right: 10px;
             padding-top: 100px;
-            padding-bottom: 100px;
         }
 
         .img {
@@ -177,9 +176,21 @@
             }
         }
 
-        #doneButton, #getWtonButton {
+        #doneButton, #getWtonButton, #cancelButton {
             margin-left: auto;
             margin-right: auto;
+        }
+
+        .footer {
+            margin-top: 100px;
+            text-align: center;
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .footer a {
+            color: #666666;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -226,7 +237,15 @@
         </div>
         <button id="getWtonButton" onclick="mint()">Get TONCOIN</button>
         <button id="doneButton" onclick="onDoneClick()">Done</button>
+        <button id="cancelButton" onclick="onCancelClick()">Cancel</button>
     </div>
+</div>
+
+<div class="footer">
+    v1.01,
+    <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source Code</a>,
+    <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
+    <a href="https://github.com/newton-blockchain/TIPs/issues/24" target="_blank">Documentation</a>
 </div>
 
 <script type="text/javascript" src="tonweb-0.0.13.js"></script>
@@ -496,6 +515,7 @@
         }
         $('#transferButton').style.display = state.step > 0 ? 'none' : 'block';
         $('#info').style.display = state.step > 0 ? 'block' : 'none';
+        $('#cancelButton').style.display = state.isTonToEth && state.step === 1 ? 'block' : 'none';
 
         // SWAP
 
@@ -556,6 +576,7 @@
             $('#doneButton').style.display = state.step > 3 ? 'block' : 'none';
             $('#getWtonButton').style.display = state.isTonToEth && state.step === 3 ? 'block' : 'none';
         }
+
     }
 
     function toggleTonToEth() {
@@ -676,6 +697,11 @@
             }
             updateView();
         }
+    }
+
+    function onCancelClick() {
+        deleteState();
+        initState();
     }
 
     setInterval(() => updateState(), 5000);
