@@ -242,7 +242,7 @@
 </div>
 
 <div class="footer">
-    v1.01,
+    v1.02,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
     <a href="https://github.com/newton-blockchain/TIPs/issues/24" target="_blank">Documentation</a>
@@ -281,7 +281,7 @@
     // VARIABLES
 
     const IS_TESTNET = true//window.location.href.indexOf('testnet') > -1;
-    const WTON_ADDRESS = IS_TESTNET ? '0x2a1407A11e2B6792474E27e95269Ec0A16EC245b' : '';
+    const WTON_ADDRESS = IS_TESTNET ? '0x10922606e41e5b7Fcca21e773B00f0436D4F941F' : '';
     const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'kf9gj99uxzzI40JMyf07i6QRtoBre9sWJ2COapiurSNT0Zop' : '';
     const TONCENTER_URL = IS_TESTNET ? 'https://testnet.toncenter.com/api/v2/jsonRPC' : 'https://toncenter.com/api/v2/jsonRPC';
     const ETH_CHAIN_ID = IS_TESTNET ? 3 : 1;
@@ -322,8 +322,8 @@
     function getSwapTonToEthId(web3, d) {
         return Web3.utils.sha3(
             web3.eth.abi.encodeParameters(
-                ['address', 'uint256', 'int8', 'bytes32', 'bytes32', 'uint64'],
-                [d.receiver, d.amount, d.tx.address_.workchain, d.tx.address_.address_hash, d.tx.tx_hash, d.tx.lt]
+                ['int', 'address', 'uint256', 'int8', 'bytes32', 'bytes32', 'uint64'],
+                [0xDA7A, d.receiver, d.amount, d.tx.address_.workchain, d.tx.address_.address_hash, d.tx.tx_hash, d.tx.lt]
             )
         );
     }
