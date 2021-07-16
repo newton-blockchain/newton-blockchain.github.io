@@ -189,6 +189,54 @@
         "@type": "pub.ed25519",
         "key": "8sEr/sw8EmFyuJaOQlbNbT0IKj8NtoCsFw5052hVvHw="
       }
+    },
+    {
+      "ip": 1091931625,
+      "port": 30131,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "wrQaeIFispPfHndEBc0s0fx7GSp8UFFvebnytQQfc6A="
+      }
+    },
+    {
+      "ip": 1091931590,
+      "port": 47160,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "vOe1Xqt/1AQ2Z56Pr+1Rnw+f0NmAA7rNCZFIHeChB7o="
+      }
+    },
+    {
+      "ip": 1091931623,
+      "port": 17728,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "BYSVpL7aPk0kU5CtlsIae/8mf2B/NrBi7DKmepcjX6Q="
+      }
+    },
+    {
+      "ip": 1091931589,
+      "port": 13570,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "iVQH71cymoNgnrhOT35tl/Y7k86X5iVuu5Vf68KmifQ="
+      }
+    },
+    {
+      "ip": -1539021362,
+      "port": 52995,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "QnGFe9kihW+TKacEvvxFWqVXeRxCB6ChjjhNTrL7+/k="
+      }
+    },
+    {
+      "ip": -1539021936,
+      "port": 20334,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "gyLh12v4hBRtyBygvvbbO2HqEtgl+ojpeRJKt4gkMq0="
+      }
     }
   ],
   "validator": {
