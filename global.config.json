@@ -421,6 +421,30 @@
         "@type": "pub.ed25519",
         "key": "gyLh12v4hBRtyBygvvbbO2HqEtgl+ojpeRJKt4gkMq0="
       }
+    },
+    {
+      "ip": -1136338705,
+      "port": 19925,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "ucho5bEkufbKN1JR1BGHpkObq602whJn3Q3UwhtgSo4="
+      }
+    },
+    {
+      "ip": 868465979,
+      "port": 52888,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "MhrcOEIlxMNe34cfb4GMmMl0OoPKe3HSDGl8miK5rRU="
+      }
+    },
+    {
+      "ip": 868466060,
+      "port": 48621,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "z0eg+Dll54aUJFc8WvU8CZP6CUKPqUcra+zJLxti5wU="
+      }
     }
   ],
   "validator": {
