@@ -336,7 +336,7 @@
     },
     {
       "ip": -2018135749,
-      "port": "53312",
+      "port": 53312,
       "id": {
         "@type": "pub.ed25519",
         "key": "aF91CuUHuuOv9rm2W5+O/4h38M3sRm40DtSdRxQhmtQ="
