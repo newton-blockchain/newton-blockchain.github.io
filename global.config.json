@@ -319,14 +319,6 @@
       }
     },
     {
-      "ip": 1560268637,
-      "port": 6199,
-      "id": {
-        "@type": "pub.ed25519",
-        "key": "NSyVw0XhPhW4Yg5a3NhS1dkCc6ZY7Hex40tJ6EiBMAI="
-      }
-    },
-    {
       "ip": 84478511,
       "port": 19949,
       "id": {
