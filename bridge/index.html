@@ -299,9 +299,9 @@
 
     const IS_TESTNET = true//window.location.href.indexOf('testnet') > -1;
     const WTON_ADDRESS = IS_TESTNET ? '0x10922606e41e5b7Fcca21e773B00f0436D4F941F' : '';
-    const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'Ef9wqRhALA21IfeK84Np6NeRoswY7USvfYKidnM_h8__qe5D' : '';
+    const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'Ef_lvDTnzW2GaZZ7EXz3ZEqUBXHRafuNyTWMLRI6B9-5pO6t' : '';
     const TON_COLLECTOR_ADDRESS = IS_TESTNET ? 'UQCuzvIOXLjH2tv35gY4tzhIvXCqZWDuK9kUhFGXKLImg0k8' : '';
-    const TON_MULTISIG_ADDRESS = IS_TESTNET ? '0f_NB2fIU1Dn8dUtbFuNAdqx-av1JBdXjWw2304kkR1axutw' : '';
+    const TON_MULTISIG_ADDRESS = IS_TESTNET ? 'kf_6f17Q733TKevUuhYIyZHtYLMmo5U8Bz54kq_oqfg2QkLc' : '';
     const TONCENTER_URL = IS_TESTNET ? 'https://testnet.toncenter.com/api/v2/jsonRPC' : 'https://toncenter.com/api/v2/jsonRPC';
     const ETH_CHAIN_ID = IS_TESTNET ? 3 : 1;
 
@@ -363,7 +363,8 @@
     }
 
     function getQueryId(ethToTon) {
-        const timeout = ethToTon.blockTime + 24 * 60 * 60 + 1; // 1 day
+        const VERSION = 2;
+        const timeout = ethToTon.blockTime + 24 * 60 * 60  + VERSION; // 1 day
         const query_id = ethToTon.transactionIndex;
         return new BN(timeout).mul(new BN(4294967296)).add(new BN(query_id));
     }
@@ -480,7 +481,7 @@
         console.log('getTonVote', result, a, b);
 
         const arr = [];
-        const count = a === -1 ? provider.oraclesTotal : b;
+        const count = a === -1 ? provider.oraclesTotal : b.toString(2).split('0').join('').length; // count of bits
         for (let i = 0; i < count; i++) {
             arr.push(1);
         }
