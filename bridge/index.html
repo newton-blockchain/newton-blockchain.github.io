@@ -299,7 +299,9 @@
 
     const IS_TESTNET = true//window.location.href.indexOf('testnet') > -1;
     const WTON_ADDRESS = IS_TESTNET ? '0x10922606e41e5b7Fcca21e773B00f0436D4F941F' : '';
-    const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'kf9gj99uxzzI40JMyf07i6QRtoBre9sWJ2COapiurSNT0Zop' : '';
+    const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'Ef9wqRhALA21IfeK84Np6NeRoswY7USvfYKidnM_h8__qe5D' : '';
+    const TON_COLLECTOR_ADDRESS = IS_TESTNET ? 'UQCuzvIOXLjH2tv35gY4tzhIvXCqZWDuK9kUhFGXKLImg0k8' : '';
+    const TON_MULTISIG_ADDRESS = IS_TESTNET ? '0f_NB2fIU1Dn8dUtbFuNAdqx-av1JBdXjWw2304kkR1axutw' : '';
     const TONCENTER_URL = IS_TESTNET ? 'https://testnet.toncenter.com/api/v2/jsonRPC' : 'https://toncenter.com/api/v2/jsonRPC';
     const ETH_CHAIN_ID = IS_TESTNET ? 3 : 1;
 
@@ -309,7 +311,10 @@
     //     web3: null,
     //     wtonContract: null,
     //     tonweb: null,
-    //     oraclesTotal: 0
+    //     oraclesTotal: 0,
+    //     feeFlat: 0,
+    //     feeFactor: 0,
+    //     feeBase: 0,
     // };
 
     let state = {
@@ -317,6 +322,7 @@
         amount: 0,
         toAddress: null,
         swapId: null,
+        queryId: '0',
         fromCurrencySent: false,
         toCurrencySent: false,
         step: 0,
@@ -346,20 +352,26 @@
     }
 
     function serializeEthToTon(ethToTon) {
-        const bits = new TonWeb.boc.BitString(8 + 256 + 8 + 256 + 64);
+        const bits = new TonWeb.boc.BitString(8 + 256 + 16 + 8 + 256 + 64);
         bits.writeUint(0, 8); // vote op
         bits.writeUint(new BN(ethToTon.transactionHash.substr(2), 16), 256);
+        bits.writeInt(ethToTon.transactionIndex, 16);
         bits.writeUint(ethToTon.to.workchain, 8);
         bits.writeUint(new BN(ethToTon.to.address_hash, 16), 256);
         bits.writeUint(new BN(ethToTon.value), 64);
         return bits.array;
     }
 
-    const MIN_FEE = new BN(5 * 1e9); // 5 TON minimum fee
+    function getQueryId(ethToTon) {
+        const timeout = ethToTon.blockTime + 24 * 60 * 60 + 1; // 1 day
+        const query_id = ethToTon.transactionIndex;
+        return new BN(timeout).mul(new BN(4294967296)).add(new BN(query_id));
+    }
 
     const getFeeAmount = (amount) => {
-        const rest = new BN(amount).sub(MIN_FEE);
-        return MIN_FEE.add(rest.mul(new BN(15)).div(new BN(100 * 100))) // 0.15% fee percent
+        const rest = new BN(amount).sub(provider.feeFlat);
+        const percentFee = rest.mul(provider.feeFactor).div(provider.feeBase);
+        return provider.feeFlat.add(percentFee)
     }
 
     async function getSwap(myAmount, myToAddress, myCreateTime) {
@@ -446,7 +458,7 @@
     async function getEthVote(voteId) {
         console.log('getEthVote ', voteId);
 
-        const result = await provider.tonweb.provider.call(TON_BRIDGE_ADDRESS, 'get_external_voting_data', [['num', voteId]]);
+        const result = await provider.tonweb.provider.call(TON_COLLECTOR_ADDRESS, 'get_external_voting_data', [['num', voteId]]);
         if (result.exit_code === 309) {
             return null;
         }
@@ -459,24 +471,20 @@
         return status.signatures;
     }
 
-    async function getTonVote(voteId) {
-        console.log('getTonVote ', voteId);
+    async function getTonVote(queryId) {
+        console.log('getTonVote ', queryId);
 
-        const result = await provider.tonweb.provider.call(TON_BRIDGE_ADDRESS, 'get_ton_voting_status', [['num', voteId]]);
-        if (result.exit_code === 309) {
-            return null;
+        const result = await provider.tonweb.provider.call(TON_MULTISIG_ADDRESS, 'get_query_state', [['num', queryId]]);
+        const a = getNumber(result.stack[0]);
+        const b = getNumber(result.stack[1]);
+        console.log('getTonVote', result, a, b);
+
+        const arr = [];
+        const count = a === -1 ? provider.oraclesTotal : b;
+        for (let i = 0; i < count; i++) {
+            arr.push(1);
         }
-        const stack = result.stack;
-
-        const list = stack[3][1].elements;
-
-        const status = {
-            isExecuted: getBool(stack[0]),
-            executionUTime: getNumber(stack[1]),
-            voted: getNumber(stack[2]),
-            votedOracleIds: list.map(parseAddressFromDec)
-        };
-        return status.votedOracleIds;
+        return arr;
     }
 
     // VIEW
@@ -641,12 +649,27 @@
             }
 
             const tonweb = new TonWeb(new TonWeb.HttpProvider(TONCENTER_URL));
+
+            const bridgeData = (await tonweb.provider.call(TON_BRIDGE_ADDRESS, 'get_bridge_data', [])).stack;
+            if (bridgeData.length !== 8) throw new Error('Invalid bridge data')
+            const stateFlags = getNumber(bridgeData[0]);
+            const totalLocked = getNumber(bridgeData[1]);
+            const collectorWc = getNumber(bridgeData[2]);
+            const collectorAddr = bridgeData[3][1]; // string
+            const feeFlat = new BN(getNumber(bridgeData[4]));
+            const feeNetwork = new BN(getNumber(bridgeData[5]));
+            const feeFactor = new BN(getNumber(bridgeData[6]));
+            const feeBase = new BN(getNumber(bridgeData[7]));
+
             return {
                 myEthAddress,
                 web3,
                 wtonContract,
                 tonweb,
-                oraclesTotal
+                oraclesTotal,
+                feeFlat: feeFlat.add(feeNetwork),
+                feeFactor,
+                feeBase
             };
         }
     }
@@ -707,7 +730,7 @@
             }
         }
         if (state.step === 2) {
-            state.votes = state.isTonToEth ? await getEthVote(state.swapId) : await getTonVote(state.swapId);
+            state.votes = state.isTonToEth ? await getEthVote(state.swapId) : await getTonVote(state.queryId);
             const votesLength = state.votes ? state.votes.length : 0;
             if (votesLength >= provider.oraclesTotal * 2 / 3) {
                 state.step = state.isTonToEth ? 3 : 4;
@@ -784,14 +807,24 @@
 
         if (receipt.status) {
             console.log('transactionHash', receipt.transactionHash);
-            state.swapId = sha256(serializeEthToTon({
+            const blockNumber = receipt.blockNumber;
+            const block = await provider.web3.eth.getBlock(blockNumber);
+
+            const ethToTon = {
                 transactionHash: receipt.transactionHash,
+                transactionIndex: receipt.transactionIndex,
+                blockNumber: receipt.blockNumber,
+                blockTime: Number(block.timestamp),
+                from: fromAddress,
                 to: {
                     workchain: wc,
                     address_hash: hashPart
                 },
                 value: amountUnit
-            }));
+            };
+
+            state.swapId = sha256(serializeEthToTon(ethToTon));
+            state.queryId = getQueryId(ethToTon).toString();
             state.step = 2;
             updateView();
         } else {
