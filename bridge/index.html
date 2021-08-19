@@ -297,7 +297,7 @@
 
     // VARIABLES
 
-    const IS_TESTNET = window.location.href.indexOf('mainnet') == -1;
+    const IS_TESTNET = window.location.href.indexOf('testnet') > -1;
 
     if (IS_TESTNET) {
         $('.testnet-warning').style.display = 'block';
