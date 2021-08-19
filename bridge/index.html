@@ -193,22 +193,29 @@
             text-decoration: underline;
         }
 
-        #mainnet {
-            font-size: 24px;
+        .testnet-warning {
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: white;
+            width: 100%;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: center;
+            background-color: red;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="img"></div>
-
-<div id="mainnet" class="form" style="display: none;">
-    <div style="margin-bottom: 40px"><b>TON-ETH bridge</b> will be launched soon in <b>mainnet</b>.</div>
-
-    <div>While you can test <a href="?testnet=true">bridge in testnet</a>.</div>
+<div class="testnet-warning" style="display: none">
+    TESTNET
 </div>
 
-<div id="form" class="form" style="display: none">
+<div class="img"></div>
+
+<div id="form" class="form">
     <div id="title" onclick="toggleTonToEth()">
         <div>
             <div class="title" id="fromNetwork">TON Testnet</div>
@@ -251,7 +258,7 @@
     </div>
 </div>
 
-<div class="footer" style="display: none">
+<div class="footer">
     v1.1,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
@@ -290,18 +297,16 @@
 
     // VARIABLES
 
-    if (window.location.href.indexOf('testnet') > -1) {
-        $('#form').style.display = 'flex';
-        $('.footer').style.display = 'flex';
-    } else {
-        $('#mainnet').style.display = 'flex';
+    const IS_TESTNET = window.location.href.indexOf('mainnet') == -1;
+
+    if (IS_TESTNET) {
+        $('.testnet-warning').style.display = 'block';
     }
 
-    const IS_TESTNET = true//window.location.href.indexOf('testnet') > -1;
-    const WTON_ADDRESS = IS_TESTNET ? '0x10922606e41e5b7Fcca21e773B00f0436D4F941F' : '';
-    const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'Ef_dJMSh8riPi3BTUTtcxsWjG8RLKnLctNjAM4rw8NN-xWdr' : '';
-    const TON_COLLECTOR_ADDRESS = IS_TESTNET ? 'UQCuzvIOXLjH2tv35gY4tzhIvXCqZWDuK9kUhFGXKLImg0k8' : '';
-    const TON_MULTISIG_ADDRESS = IS_TESTNET ? 'kf_6f17Q733TKevUuhYIyZHtYLMmo5U8Bz54kq_oqfg2QkLc' : '';
+    const WTON_ADDRESS = IS_TESTNET ? '0x10922606e41e5b7Fcca21e773B00f0436D4F941F' : '0x582d872a1b094fc48f5de31d3b73f2d9be47def1';
+    const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'Ef_dJMSh8riPi3BTUTtcxsWjG8RLKnLctNjAM4rw8NN-xWdr' : 'Ef_dJMSh8riPi3BTUTtcxsWjG8RLKnLctNjAM4rw8NN-xWdr';
+    const TON_COLLECTOR_ADDRESS = IS_TESTNET ? 'UQCuzvIOXLjH2tv35gY4tzhIvXCqZWDuK9kUhFGXKLImg0k8' : 'EQCuzvIOXLjH2tv35gY4tzhIvXCqZWDuK9kUhFGXKLImgxT5';
+    const TON_MULTISIG_ADDRESS = IS_TESTNET ? 'kf_6f17Q733TKevUuhYIyZHtYLMmo5U8Bz54kq_oqfg2QkLc' : 'kf8rV4RD7BD-j_C-Xsu8FBO9BOOOwISjNPbBC8tcq688Gcmk';
     const TONCENTER_URL = IS_TESTNET ? 'https://testnet.toncenter.com/api/v2/jsonRPC' : 'https://toncenter.com/api/v2/jsonRPC';
     const ETH_CHAIN_ID = IS_TESTNET ? 3 : 1;
 
