@@ -259,7 +259,7 @@
 </div>
 
 <div class="footer">
-    v1.11,
+    v1.12,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
     <a href="https://github.com/newton-blockchain/TIPs/issues/24" target="_blank">Documentation</a>
@@ -768,12 +768,16 @@
     async function mint() {
         let receipt;
         try {
-            const signatures = state.votes.map(v => {
+            let signatures = state.votes.map(v => {
                 return {
                     signer: v.publicKey,
                     signature: joinSignature({r: v.r, s: v.s, v: v.v})
                 }
             })
+
+            signatures = signatures.sort((a, b) => {
+               return new BN(a.signer.substr(2), 16).cmp(new BN(b.signer.substr(2), 16));
+            });
 
             console.log('voteForMinting', JSON.stringify(state.swapData), JSON.stringify(signatures));
 
