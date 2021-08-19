@@ -252,7 +252,7 @@
 </div>
 
 <div class="footer" style="display: none">
-    v1.02,
+    v1.1,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
     <a href="https://github.com/newton-blockchain/TIPs/issues/24" target="_blank">Documentation</a>
@@ -355,7 +355,7 @@
         const bits = new TonWeb.boc.BitString(8 + 256 + 16 + 8 + 256 + 64);
         bits.writeUint(0, 8); // vote op
         bits.writeUint(new BN(ethToTon.transactionHash.substr(2), 16), 256);
-        bits.writeInt(ethToTon.transactionIndex, 16);
+        bits.writeInt(ethToTon.logIndex, 16);
         bits.writeUint(ethToTon.to.workchain, 8);
         bits.writeUint(new BN(ethToTon.to.address_hash, 16), 256);
         bits.writeUint(new BN(ethToTon.value), 64);
@@ -363,10 +363,13 @@
     }
 
     function getQueryId(ethToTon) {
+        const MULTISIG_QUERY_TIMEOUT = 30 * 24 * 60 * 60; // 30 days
         const VERSION = 2;
-        const timeout = ethToTon.blockTime + 24 * 60 * 60  + VERSION; // 1 day
-        const query_id = ethToTon.transactionIndex;
-        return new BN(timeout).mul(new BN(4294967296)).add(new BN(query_id));
+        const timeout = ethToTon.blockTime + MULTISIG_QUERY_TIMEOUT + VERSION;
+
+        const query_id = Web3.utils.sha3(ethToTon.blockHash + '_' + ethToTon.transactionHash + '_' + ethToTon.logIndex).substr(2, 8); // get first 32 bit
+
+        return new TonWeb.utils.BN(timeout).mul(new TonWeb.utils.BN(4294967296)).add(new TonWeb.utils.BN(query_id, 16));
     }
 
     const getFeeAmount = (amount) => {
@@ -377,7 +380,7 @@
 
     async function getSwap(myAmount, myToAddress, myCreateTime) {
         console.log('getTransactions');
-        const transactions = await provider.tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, 20);
+        const transactions = await provider.tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, 40);
         console.log('ton txs', transactions.length)
 
         const findLogOutMsg = (outMessages) => {
@@ -683,6 +686,7 @@
             amount: 0,
             toAddress: null,
             swapId: null,
+            queryId: '0',
             fromCurrencySent: false,
             toCurrencySent: false,
             step: 0,
@@ -807,15 +811,17 @@
         }
 
         if (receipt.status) {
-            console.log('transactionHash', receipt.transactionHash);
+            console.log('receipt', receipt);
             const blockNumber = receipt.blockNumber;
+            const logIndex = receipt.events.SwapEthToTon.logIndex;
             const block = await provider.web3.eth.getBlock(blockNumber);
 
             const ethToTon = {
                 transactionHash: receipt.transactionHash,
-                transactionIndex: receipt.transactionIndex,
+                logIndex: logIndex,
                 blockNumber: receipt.blockNumber,
                 blockTime: Number(block.timestamp),
+                blockHash: block.hash,
                 from: fromAddress,
                 to: {
                     workchain: wc,
