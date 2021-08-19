@@ -218,12 +218,12 @@
 <div id="form" class="form">
     <div id="title" onclick="toggleTonToEth()">
         <div>
-            <div class="title" id="fromNetwork">TON Testnet</div>
+            <div class="title" id="fromNetwork">TON Network</div>
             <div id="fromCoin">TON Coin (Native)</div>
         </div>
         <div class="arrow"></div>
         <div>
-            <div class="title" id="toNetwork">Ethereum Ropsten</div>
+            <div class="title" id="toNetwork">Ethereum</div>
             <div id="toCoin">TONCOIN (ERC20)</div>
         </div>
     </div>
@@ -233,7 +233,7 @@
     </div>
 
     <div class="input-container">
-        <label for="toInput" id="toInputLabel">Address to receive in Ethereum Ropsten:</label><br>
+        <label for="toInput" id="toInputLabel">Address to receive in Ethereum Network:</label><br>
         <input class="input" type="text" id="toInput" value="">
     </div>
 
@@ -259,7 +259,7 @@
 </div>
 
 <div class="footer">
-    v1.1,
+    v1.11,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
     <a href="https://github.com/newton-blockchain/TIPs/issues/24" target="_blank">Documentation</a>
@@ -383,6 +383,15 @@
         return provider.feeFlat.add(percentFee)
     }
 
+    const makeAddress = (address) => {
+        if (!address.startsWith('0x')) throw new Error('Invalid address ' + address);
+        let hex = address.substr(2);
+        while (hex.length < 40) {
+            hex = '0' + hex;
+        }
+        return '0x' + hex;
+    }
+
     async function getSwap(myAmount, myToAddress, myCreateTime) {
         console.log('getTransactions');
         const transactions = await provider.tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, 40);
@@ -407,7 +416,7 @@
                     console.error('bad log message ' + logMsg)
                     return null;
                 }
-                const destinationAddress = '0x' + TonWeb.utils.bytesToHex(bytes.slice(0, 20));
+                const destinationAddress = makeAddress('0x' + TonWeb.utils.bytesToHex(bytes.slice(0, 20)));
                 const amountHex = TonWeb.utils.bytesToHex(bytes.slice(20, 28));
                 const amount = new BN(amountHex, 16);
                 const senderAddress = new TonWeb.utils.Address(t.in_msg.source);
@@ -450,7 +459,7 @@
 
     const parseEthSignature = (data) => {
         const tuple = data.tuple.elements;
-        const publicKey = decToHex(tuple[0].number.number);
+        const publicKey = makeAddress(decToHex(tuple[0].number.number));
 
         const rsv = tuple[1].tuple.elements;
         const r = decToHex(rsv[0].number.number);
@@ -624,7 +633,7 @@
         const ethereum = window.ethereum;
 
         if (!ethereum) {
-            alert('MetaMask not installed');
+            alert('Please install MetaMask');
             return null;
         } else {
             let myEthAddress;
