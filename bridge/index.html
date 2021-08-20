@@ -534,15 +534,19 @@
         icon.classList.add(currentStep === step ? 'pending' : (currentStep > step ? 'done' : 'none'));
     }
 
+    async function getEthGasPrice() {
+        const data = JSON.parse(await httpGet('https://ethgasstation.info/api/ethgasAPI.json?'));
+        const gasPrice = Number(data.average) / 10;
+        return gasPrice > 0 ? gasPrice : 25;
+    }
+
+    const ethGasPrice = getEthGasPrice();
+
     async function updateEthFee() {
         $('#ethFee').innerText = state.isTonToEth ? 'Ethereum gas fee ~ 0.004 ETH' : 'Ethereum gas fee ~ 0.001 ETH';
         try {
-            const data = JSON.parse(await httpGet('https://ethgasstation.info/api/ethgasAPI.json?'));
-            const gasPrice = Number(data.average) / 10;
-            if (gasPrice > 0) {
-                const n = gasPrice / 25;
-                $('#ethFee').innerText = state.isTonToEth ? `Ethereum gas fee ~ ${(0.004 * n).toFixed(3)} ETH` : `Ethereum gas fee ~ ${(0.001 * n).toFixed(3)} ETH`;
-            }
+            const n = (await ethGasPrice) / 25;
+            $('#ethFee').innerText = state.isTonToEth ? `Ethereum gas fee ~ ${(0.004 * n).toFixed(3)} ETH` : `Ethereum gas fee ~ ${(0.001 * n).toFixed(3)} ETH`;
         } catch (e) {
 
         }
