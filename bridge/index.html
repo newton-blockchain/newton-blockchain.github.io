@@ -550,7 +550,7 @@
 
     function updateBridgeFee() {
         const amount = Number($('#amountInput').value);
-        if (!isNaN(amount) && amount > 10) {
+        if (!isNaN(amount) && amount >= 10) {
             $('#bridgeFee').innerText = 'Bridge fee - ' + (5 + (amount - 5) * (0.25 / 100)) + ' TON';
         } else {
             $('#bridgeFee').innerText = 'Bridge fee - 5 TON + 0.25% of amount';
