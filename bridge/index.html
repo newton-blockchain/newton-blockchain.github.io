@@ -68,7 +68,6 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            cursor: pointer;
             margin-bottom: 40px;
         }
 
@@ -87,7 +86,12 @@
             margin-top: 4px;
         }
 
+        a.coinLink, a.coinLink:hover, a.coinLink:after, a.coinLink:active, a.coinLink:focus {
+            color: #000;
+        }
+
         .arrow {
+            cursor: pointer;
             background-image: url('arrow.svg');
             background-size: contain;
             background-repeat: no-repeat;
@@ -205,6 +209,15 @@
             background-color: red;
             font-weight: bold;
         }
+
+        #ethFee {
+            color: #444444;
+            margin-bottom: 4px;
+        }
+
+        #bridgeFee {
+            color: #444444;
+        }
     </style>
 </head>
 <body>
@@ -216,12 +229,12 @@
 <div class="img"></div>
 
 <div id="form" class="form">
-    <div id="title" onclick="toggleTonToEth()">
+    <div id="title">
         <div>
             <div class="title" id="fromNetwork">TON Network</div>
             <div id="fromCoin">TON Coin (Native)</div>
         </div>
-        <div class="arrow"></div>
+        <div class="arrow" onclick="toggleTonToEth()"></div>
         <div>
             <div class="title" id="toNetwork">Ethereum</div>
             <div id="toCoin">TONCOIN (ERC20)</div>
@@ -235,6 +248,13 @@
     <div class="input-container">
         <label for="toInput" id="toInputLabel">Address to receive in Ethereum Network:</label><br>
         <input class="input" type="text" id="toInput" value="">
+    </div>
+
+    <div id="ethFee">
+        Ethereum Gas Fee ~ 0.004 ETH
+    </div>
+    <div id="bridgeFee">
+        Bridge fee - 5 TON + 0.25% of amount
     </div>
 
     <button id="transferButton">Transfer</button>
@@ -259,10 +279,11 @@
 </div>
 
 <div class="footer">
-    v1.12,
-    <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source Code</a>,
+    v1.13,
+    <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source
+        Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
-    <a href="https://github.com/newton-blockchain/TIPs/issues/24" target="_blank">Documentation</a>
+    <a href="https://github.com/newton-blockchain/TIPs/issues/24" target="_blank">Documentation</a>.
 </div>
 
 <script type="text/javascript" src="tonweb-0.0.13.js"></script>
@@ -513,6 +534,34 @@
         icon.classList.add(currentStep === step ? 'pending' : (currentStep > step ? 'done' : 'none'));
     }
 
+    async function updateEthFee() {
+        $('#ethFee').innerText = state.isTonToEth ? 'Ethereum Gas Fee ~ 0.004 ETH' : 'Ethereum Gas Fee ~ 0.001 ETH';
+        try {
+            const data = JSON.parse(await httpGet('https://ethgasstation.info/api/ethgasAPI.json?'));
+            const gasPrice = Number(data.average) / 10;
+            if (gasPrice > 0) {
+                const n = gasPrice / 25;
+                $('#ethFee').innerText = state.isTonToEth ? `Ethereum Gas Fee ~ ${(0.004 * n).toFixed(3)} ETH` : `Ethereum Gas Fee ~ ${(0.001 * n).toFixed(3)} ETH`;
+            }
+        } catch (e) {
+
+        }
+    }
+
+    function updateBridgeFee() {
+        const amount = Number($('#amountInput').value);
+        if (!isNaN(amount) && amount > 10) {
+            $('#bridgeFee').innerText = 'Bridge fee - ' + (5 + (amount - 5) * (0.25 / 100)) + ' TON';
+        } else {
+            $('#bridgeFee').innerText = 'Bridge fee - 5 TON + 0.25% of amount';
+        }
+    }
+
+    $('#amountInput').addEventListener('change', updateBridgeFee);
+    $('#amountInput').addEventListener('input', updateBridgeFee);
+    $('#amountInput').addEventListener('cut', updateBridgeFee);
+    $('#amountInput').addEventListener('paste', updateBridgeFee);
+
     function updateView() {
 
         const TON_NETWORK = IS_TESTNET ? 'TON Testnet' : 'TON Network';
@@ -529,20 +578,24 @@
 
         const fromCoin = state.isTonToEth ? 'TON Coin' : 'TONCOIN';
         const toCoin = !state.isTonToEth ? 'TON Coin' : 'TONCOIN';
-        const fromCoinFull = state.isTonToEth ? 'TON Coin (Native)' : 'TONCOIN (ERC20)';
-        const toCoinFull = !state.isTonToEth ? 'TON Coin (Native)' : 'TONCOIN (ERC20)';
+        const coinLink = `<a class="coinLink" href="https://${IS_TESTNET ? 'ropsten.' : ''}etherscan.io/token/${WTON_ADDRESS}" target="_blank">TONCOIN (ERC20)</a>`;
+        const fromCoinFull = state.isTonToEth ? 'TON Coin (Native)' : coinLink;
+        const toCoinFull = !state.isTonToEth ? 'TON Coin (Native)' : coinLink;
 
         $('#fromNetwork').innerText = fromNetwork;
-        $('#fromCoin').innerText = fromCoinFull;
+        $('#fromCoin').innerHTML = fromCoinFull;
 
         $('#toNetwork').innerText = toNetwork;
-        $('#toCoin').innerText = toCoinFull;
+        $('#toCoin').innerHTML = toCoinFull;
 
         if (state.isTonToEth) {
             $('.img').classList.remove('img-scale');
         } else {
             $('.img').classList.add('img-scale');
         }
+
+        updateEthFee();
+        updateBridgeFee();
 
         $('#toInputLabel').innerText = 'Address to receive in ' + toNetworkFull + ':';
 
@@ -646,9 +699,14 @@
                 return null;
             }
 
-            ethereum.on('accountsChanged', function (accounts) {
+            ethereum.on('accountsChanged', async (accounts) => {
                 console.log('accountsChanged', accounts);
-                provider.myEthAddress = accounts[0];
+                const address = accounts[0];
+                if (!(new BN(await web3.eth.getBalance(address)).gt(new BN('0')))) {
+                    alert('You need to have ETH on your wallet to pay for gas in the Ethereum network');
+                    return null;
+                }
+                provider.myEthAddress = address;
                 console.log('address is', provider.myEthAddress);
             });
 
@@ -663,6 +721,11 @@
             const oraclesTotal = (await wtonContract.methods.getFullOracleSet().call()).length;
 
             if (!(oraclesTotal > 0)) {
+                return null;
+            }
+
+            if (!(new BN(await web3.eth.getBalance(myEthAddress)).gt(new BN('0')))) {
+                alert('You need to have ETH on your wallet to pay for gas in the Ethereum network');
                 return null;
             }
 
@@ -776,7 +839,7 @@
             })
 
             signatures = signatures.sort((a, b) => {
-               return new BN(a.signer.substr(2), 16).cmp(new BN(b.signer.substr(2), 16));
+                return new BN(a.signer.substr(2), 16).cmp(new BN(b.signer.substr(2), 16));
             });
 
             console.log('voteForMinting', JSON.stringify(state.swapData), JSON.stringify(signatures));
