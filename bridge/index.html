@@ -257,8 +257,8 @@
         Bridge fee - 5 TON + 0.25% of amount
     </div>
 
-    <button id="_transferButton" style="display:none;">Transfer</button>
-    <button disabled style="background-color: #ffc3c7;"> Currently under maintenance </button>
+    <button id="transferButton">Transfer</button>
+
     <div id="info" style="display: none">
         <div class="info-line">
             <div id="icon1"></div>
@@ -457,7 +457,7 @@
                 }
                 console.log(JSON.stringify(event));
 
-                const myAmountNano = new BN(myAmount).mul(new BN(1e9));
+                const myAmountNano = new BN(myAmount * 1e9);
                 const amountAfterFee = myAmountNano.sub(getFeeAmount(myAmountNano));
 
                 if (amount.eq(amountAfterFee) && event.receiver.toLowerCase() === myToAddress.toLowerCase()) {
@@ -648,7 +648,18 @@
             }
 
             if (state.step === 2) {
-                $('#info2').innerHTML = 'Collected ' + (state.votes ? state.votes.length : 0) + '/' + provider.oraclesTotal + ' confirmations of oracles';
+
+                if (state.isTonToEth) {
+                    $('#info2').innerHTML = 'Collected ' + (state.votes ? state.votes.length : 0) + '/' + provider.oraclesTotal + ' confirmations of oracles';
+                } else {
+                    const confirmations = provider.blockNumber - state.blockNumber;
+                    if (provider.blockNumber && state.blockNumber && (confirmations <= 12)) {
+                        $('#info2').innerHTML = 'Collected ' + confirmations + '/12 Ethereum block confirmations';
+                    } else {
+                        $('#info2').innerHTML = 'Collected ' + (state.votes ? state.votes.length : 0) + '/' + provider.oraclesTotal + ' confirmations of oracles';
+                    }
+                }
+
             } else if (state.step > 2) {
                 $('#info2').innerHTML = 'The confirmations of the oracles are collected';
             } else {
@@ -733,6 +744,13 @@
                 return null;
             }
 
+            web3.eth.subscribe('newBlockHeaders')
+                .on('data', (blockHeader) => {
+                    provider.blockNumber = blockHeader.number;
+                }).on('error', (error) => {
+                console.error("Error on newBlockHeaders", error);
+            });
+
             const tonweb = new TonWeb(new TonWeb.HttpProvider(TONCENTER_URL));
 
             const bridgeData = (await tonweb.provider.call(TON_BRIDGE_ADDRESS, 'get_bridge_data', [])).stack;
@@ -774,6 +792,7 @@
             votes: [],
             swapData: null,
             createTime: 0,
+            blockNumber: 0
         };
         updateView();
     }
@@ -904,7 +923,7 @@
             const ethToTon = {
                 transactionHash: receipt.transactionHash,
                 logIndex: logIndex,
-                blockNumber: receipt.blockNumber,
+                blockNumber: blockNumber,
                 blockTime: Number(block.timestamp),
                 blockHash: block.hash,
                 from: fromAddress,
@@ -918,6 +937,7 @@
             state.swapId = sha256(serializeEthToTon(ethToTon));
             state.queryId = getQueryId(ethToTon).toString();
             state.step = 2;
+            state.blockNumber = blockNumber;
             updateView();
         } else {
             console.error('transaction fail', receipt);
