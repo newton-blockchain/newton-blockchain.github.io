@@ -434,8 +434,7 @@
                 const message = logMsg.message.substr(0, logMsg.message.length - 1); // remove '\n' from end
                 const bytes = TonWeb.utils.base64ToBytes(message);
                 if (bytes.length !== 28) {
-                    console.error('bad log message ' + logMsg)
-                    return null;
+                    continue;
                 }
                 const destinationAddress = makeAddress('0x' + TonWeb.utils.bytesToHex(bytes.slice(0, 20)));
                 const amountHex = TonWeb.utils.bytesToHex(bytes.slice(20, 28));
