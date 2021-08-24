@@ -11,24 +11,24 @@
           "@type":"dht.node",
           "id":{
              "@type":"pub.ed25519",
-             "key":"NutLY+VWoaLqgpNCdOR8Jp+Cf                                                                                                                                                                                                          2gnDjToza9d+qUnHyE="
+             "key": "NutLY+VWoaLqgpNCdOR8Jp+Cf2gnDjToza9d+qUnHyE="
           },
           "addr_list":{
-             "@type":"adnl.addressList",
-             "addrs":[
-                {
-                   "@type":"adnl.address.udp",
-                   "ip":2130706433,
-                   "port":15876
-                }
-             ],
-             "version":0,
-             "reinit_date":0,
-             "p                                                                                                                                                                                                          riority":0,
-             "expire_at":0
+            "@type": "adnl.addressList",
+            "addrs": [
+              {
+                "@type": "adnl.address.udp",
+                "ip": 2130706433,
+                "port": 15876
+              }
+            ],
+            "version": 0,
+            "reinit_date": 0,
+            "priority": 0,
+            "expire_at": 0
           },
           "version":-1,
-          "signature":"Pb7fVqjtgvnqdTHtfJmTzvaZ7gZp                                                                                                                                                                                                          kDeKThrRYTXmlpiDtPcCjijQW+m6Zg5V9ZGt2hVljnLbfvC48K4iYqzRBQ=="
+            "signature": "Pb7fVqjtgvnqdTHtfJmTzvaZ7gZpkDeKThrRYTXmlpiDtPcCjijQW+m6Zg5V9ZGt2hVljnLbfvC48K4iYqzRBQ=="
        },
        {
           "@type":"dht.node",
