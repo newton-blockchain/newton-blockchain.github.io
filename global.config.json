@@ -742,6 +742,52 @@
           },
           "version": -1,
           "signature": "ju40qeS5mgbJDMLUxL7qSquSdqgo3Uib4Z/Va/bpIWJJA0W3VQStJMBbV/pQySi6MoM794Du3o8Gl1bjdpwDAg=="
+        },
+        {
+          "@type": "dht.node",
+          "id": {
+            "@type": "pub.ed25519",
+            "key": "MJr8xja0xpu9DoisFXBrkNHNx1XozR7HHw9fJdSyEdo="
+          },
+          "addr_list": {
+            "@type": "adnl.addressList",
+            "addrs": [
+              {
+                "@type": "adnl.address.udp",
+                "ip": -2018147130,
+                "port": 6302
+              }
+            ],
+            "version": 0,
+            "reinit_date": 0,
+            "priority": 0,
+            "expire_at": 0
+          },
+          "version": -1,
+          "signature": "XcR5JaWcf4QMdI8urLSc1zwv5+9nCuItSE1EDa0dSwYF15R/BtJoKU5YHA4/T8SiO18aVPQk2SL1pbhevuMrAQ=="
+        },
+        {
+          "@type": "dht.node",
+          "id": {
+            "@type": "pub.ed25519",
+            "key": "Fhldu4zlnb20/TUj9TXElZkiEmbndIiE/DXrbGKu+0c="
+          },
+          "addr_list": {
+            "@type": "adnl.addressList",
+            "addrs": [
+              {
+                "@type": "adnl.address.udp",
+                "ip": -2018147075,
+                "port": 6302
+              }
+            ],
+            "version": 0,
+            "reinit_date": 0,
+            "priority": 0,
+            "expire_at": 0
+          },
+          "version": -1,
+          "signature": "nUGB77UAkd2+ZAL5PgInb3TvtuLLXJEJ2icjAUKLv4qIGB3c/O9k/v0NKwSzhsMP0ljeTGbcIoMDw24qf3goCg=="
         }
       ]
     }
@@ -873,6 +919,22 @@
       "id": {
         "@type": "pub.ed25519",
         "key": "z0eg+Dll54aUJFc8WvU8CZP6CUKPqUcra+zJLxti5wU="
+      }
+    },
+    {
+      "ip": -2018147130,
+      "port": 53560,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "NlYhh/xf4uQpE+7EzgorPHqIaqildznrpajJTRRH2HU="
+      }
+    },
+    {
+      "ip": -2018147075,
+      "port": 46529,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "jLO6yoooqUQqg4/1QXflpv2qGCoXmzZCR+bOsYJ2hxw="
       }
     }
   ],
