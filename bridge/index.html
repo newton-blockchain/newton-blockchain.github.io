@@ -211,12 +211,19 @@
         }
 
         #ethFee {
-            color: #444444;
+            color: #666666;
             margin-bottom: 4px;
         }
 
         #bridgeFee {
-            color: #444444;
+            color: #666666;
+            margin-bottom: 10px;
+        }
+
+        #switchButton {
+            margin-top: 30px;
+            color: #1d98dc;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -259,6 +266,8 @@
 
     <button id="transferButton">Transfer</button>
 
+    <div id="switchButton" onclick="toggleTonToEth()">Switch direction</div>
+
     <div id="info" style="display: none">
         <div class="info-line">
             <div id="icon1"></div>
@@ -279,7 +288,7 @@
 </div>
 
 <div class="footer">
-    v1.13,
+    v1.14,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source
         Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
@@ -323,6 +332,8 @@
     if (IS_TESTNET) {
         $('.testnet-warning').style.display = 'block';
     }
+
+    const IS_RECOVER = window.location.href.indexOf('recover') > -1;
 
     const WTON_ADDRESS = IS_TESTNET ? '0x10922606e41e5b7Fcca21e773B00f0436D4F941F' : '0x582d872a1b094fc48f5de31d3b73f2d9be47def1';
     const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'Ef_dJMSh8riPi3BTUTtcxsWjG8RLKnLctNjAM4rw8NN-xWdr' : 'Ef_dJMSh8riPi3BTUTtcxsWjG8RLKnLctNjAM4rw8NN-xWdr';
@@ -613,6 +624,7 @@
             $('#toInput').removeAttribute('disabled');
         }
         $('#transferButton').style.display = state.step > 0 ? 'none' : 'block';
+        $('#switchButton').style.display = state.step > 0 ? 'none' : 'block';
         $('#info').style.display = state.step > 0 ? 'block' : 'none';
         $('#cancelButton').style.display = state.isTonToEth && state.step === 1 ? 'block' : 'none';
 
@@ -978,7 +990,7 @@
 
         state.amount = amount;
         state.toAddress = toAddress;
-        state.createTime = Date.now();
+        state.createTime = IS_RECOVER ? 0 : Date.now();
         state.step = 1;
         updateView();
 
