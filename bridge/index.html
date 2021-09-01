@@ -426,7 +426,7 @@
 
     async function getSwap(myAmount, myToAddress, myCreateTime) {
         console.log('getTransactions');
-        const transactions = await provider.tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, 40);
+        const transactions = await provider.tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, (IS_RECOVERY ? 200 : 40));
         console.log('ton txs', transactions.length)
 
         const findLogOutMsg = (outMessages) => {
