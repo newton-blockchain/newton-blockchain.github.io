@@ -936,6 +936,14 @@
         "@type": "pub.ed25519",
         "key": "jLO6yoooqUQqg4/1QXflpv2qGCoXmzZCR+bOsYJ2hxw="
       }
+    },
+    {
+      "ip": 908566172,
+      "port": 51565,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "TDg+ILLlRugRB4Kpg3wXjPcoc+d+Eeb7kuVe16CS9z8="
+      }
     }
   ],
   "validator": {
