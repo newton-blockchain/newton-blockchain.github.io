@@ -288,7 +288,7 @@
 </div>
 
 <div class="footer">
-    v1.15,
+    v1.16,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source
         Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
@@ -984,6 +984,14 @@
         if (!provider) {
             provider = await initProvider();
             if (!provider) {
+                return;
+            }
+        }
+
+        if (!state.isTonToEth) {
+            const userErcBalance = fromUnit(Number(await (provider.wtonContract.methods.balanceOf(provider.myEthAddress).call())));
+            if (amount > userErcBalance) {
+                alert('You have only ' + userErcBalance + ' TONCOIN');
                 return;
             }
         }
