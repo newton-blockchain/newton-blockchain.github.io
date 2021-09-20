@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TON-ETH Bridge</title>
+    <title>TON-BSC Bridge</title>
     <meta name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
 
@@ -243,8 +243,8 @@
         </div>
         <div class="arrow" onclick="toggleTonToEth()"></div>
         <div>
-            <div class="title" id="toNetwork">Ethereum</div>
-            <div id="toCoin">TONCOIN (ERC20)</div>
+            <div class="title" id="toNetwork">Binance Smart Chain</div>
+            <div id="toCoin">TONCOIN (BEP-20)</div>
         </div>
     </div>
     <div class="input-container">
@@ -253,12 +253,12 @@
     </div>
 
     <div class="input-container">
-        <label for="toInput" id="toInputLabel">Address to receive in Ethereum Network:</label><br>
+        <label for="toInput" id="toInputLabel">Address to receive in BSC Network:</label><br>
         <input class="input" type="text" id="toInput" value="">
     </div>
 
     <div id="ethFee">
-        Ethereum gas fee ~ 0.004 ETH
+        BSC gas fee ~ 0.0008 BNB
     </div>
     <div id="bridgeFee">
         Bridge fee - 5 TON + 0.25% of amount
@@ -335,12 +335,12 @@
 
     const IS_RECOVER = window.location.href.indexOf('recover') > -1;
 
-    const WTON_ADDRESS = IS_TESTNET ? '0x10922606e41e5b7Fcca21e773B00f0436D4F941F' : '0x582d872a1b094fc48f5de31d3b73f2d9be47def1';
-    const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'Ef_dJMSh8riPi3BTUTtcxsWjG8RLKnLctNjAM4rw8NN-xWdr' : 'Ef_dJMSh8riPi3BTUTtcxsWjG8RLKnLctNjAM4rw8NN-xWdr';
-    const TON_COLLECTOR_ADDRESS = IS_TESTNET ? 'UQCuzvIOXLjH2tv35gY4tzhIvXCqZWDuK9kUhFGXKLImg0k8' : 'EQCuzvIOXLjH2tv35gY4tzhIvXCqZWDuK9kUhFGXKLImgxT5';
-    const TON_MULTISIG_ADDRESS = IS_TESTNET ? 'kf_6f17Q733TKevUuhYIyZHtYLMmo5U8Bz54kq_oqfg2QkLc' : 'kf8rV4RD7BD-j_C-Xsu8FBO9BOOOwISjNPbBC8tcq688Gcmk';
+    const WTON_ADDRESS = IS_TESTNET ? '0xA345a7C8d88279165214f6dA6e857041902955C5' : '';
+    const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'Ef9NXAIQs12t2qIZ-sRZ26D977H65Ol6DQeXc5_gUNaUys5r' : '';
+    const TON_COLLECTOR_ADDRESS = IS_TESTNET ? 'EQAHI1vGuw7d4WG-CtfDrWqEPNtmUuKjKFEFeJmZaqqfWTvW' : '';
+    const TON_MULTISIG_ADDRESS = IS_TESTNET ? 'kQDm5nYlcGs5qTCCBI3MT-kJF5lnYhoBoqmc7jdj_SDFHFxX' : '';
     const TONCENTER_URL = IS_TESTNET ? 'https://testnet.toncenter.com/api/v2/jsonRPC' : 'https://toncenter.com/api/v2/jsonRPC';
-    const ETH_CHAIN_ID = IS_TESTNET ? 3 : 1;
+    const ETH_CHAIN_ID = IS_TESTNET ? 97 : 56;
 
     let provider = null;
     // {
@@ -545,18 +545,18 @@
     }
 
     async function getEthGasPrice() {
-        const data = JSON.parse(await httpGet('https://ethgasstation.info/api/ethgasAPI.json?'));
-        const gasPrice = Number(data.average) / 10;
-        return gasPrice > 0 ? gasPrice : 25;
+        const data = JSON.parse(await httpGet('https://gbsc.blockscan.com/gasapi.ashx?apikey=key&method=gasoracle'));
+        const gasPrice = Number(data.result.SafeGasPrice);
+        return gasPrice > 0 ? gasPrice : 5;
     }
 
     const ethGasPrice = getEthGasPrice();
 
     async function updateEthFee() {
-        $('#ethFee').innerText = state.isTonToEth ? 'Ethereum gas fee ~ 0.004 ETH' : 'Ethereum gas fee ~ 0.001 ETH';
+        $('#ethFee').innerText = state.isTonToEth ? 'BSC gas fee ~ 0.0008 BNB' : 'BSC gas fee ~ 0.0002 BNB';
         try {
-            const n = (await ethGasPrice) / 25;
-            $('#ethFee').innerText = state.isTonToEth ? `Ethereum gas fee ~ ${(0.004 * n).toFixed(3)} ETH` : `Ethereum gas fee ~ ${(0.001 * n).toFixed(3)} ETH`;
+            const n = (await ethGasPrice) / 5;
+            $('#ethFee').innerText = state.isTonToEth ? `BSC gas fee ~ ${(0.0008 * n).toFixed(3)} BNB` : `BSC gas fee ~ ${(0.0002 * n).toFixed(3)} BNB`;
         } catch (e) {
 
         }
@@ -579,9 +579,9 @@
     function updateView() {
 
         const TON_NETWORK = IS_TESTNET ? 'TON Testnet' : 'TON Network';
-        const ETH_NETWORK = IS_TESTNET ? 'Ethereum Ropsten' : 'Ethereum';
+        const ETH_NETWORK = IS_TESTNET ? 'BSC Testnet' : 'Binance Smart Chain';
         const TON_NETWORK_FULL = IS_TESTNET ? 'TON Testnet' : 'TON Network';
-        const ETH_NETWORK_FULL = IS_TESTNET ? 'Ethereum Ropsten' : 'Ethereum Network';
+        const ETH_NETWORK_FULL = IS_TESTNET ? 'BSC Testnet' : 'BSC Network';
 
         // DIRECTION
 
@@ -592,7 +592,7 @@
 
         const fromCoin = state.isTonToEth ? 'TON Coin' : 'TONCOIN';
         const toCoin = !state.isTonToEth ? 'TON Coin' : 'TONCOIN';
-        const coinLink = `<a class="coinLink" href="https://${IS_TESTNET ? 'ropsten.' : ''}etherscan.io/token/${WTON_ADDRESS}" target="_blank">TONCOIN (ERC20)</a>`;
+        const coinLink = `<a class="coinLink" href="https://${IS_TESTNET ? 'testnet.' : ''}bscscan.io/token/${WTON_ADDRESS}" target="_blank">TONCOIN (BEP-20)</a>`;
         const fromCoinFull = state.isTonToEth ? 'TON Coin (Native)' : coinLink;
         const toCoinFull = !state.isTonToEth ? 'TON Coin (Native)' : coinLink;
 
@@ -644,7 +644,7 @@
                         `<a href="${url}" target="_blank">${url}</a>`;
                 } else {
 
-                    $('#info1').innerHTML = state.fromCurrencySent ? 'Please wait for the Ethereum transaction to be processed' : 'Please send Ethereum transaction in Metamask';
+                    $('#info1').innerHTML = state.fromCurrencySent ? 'Please wait for the BSC transaction to be processed' : 'Please send BSC transaction in Metamask';
 
                 }
 
@@ -653,7 +653,7 @@
                 if (state.isTonToEth) {
                     $('#info1').innerHTML = 'TON transaction completed successfully';
                 } else {
-                    $('#info1').innerHTML = 'Ethereum transaction completed successfully';
+                    $('#info1').innerHTML = 'BSC transaction completed successfully';
                 }
 
             }
@@ -665,7 +665,7 @@
                 } else {
                     const confirmations = provider.blockNumber - state.blockNumber;
                     if (provider.blockNumber && state.blockNumber && (confirmations <= 12)) {
-                        $('#info2').innerHTML = 'Collected ' + confirmations + '/12 Ethereum block confirmations';
+                        $('#info2').innerHTML = 'Collected ' + confirmations + '/12 BSC block confirmations';
                     } else {
                         $('#info2').innerHTML = 'Collected ' + (state.votes ? state.votes.length : 0) + '/' + provider.oraclesTotal + ' confirmations of oracles';
                     }
@@ -680,7 +680,7 @@
             if (state.step === 3) {
 
                 if (state.isTonToEth) {
-                    $('#info3').innerHTML = state.toCurrencySent ? 'Please wait for the Ethereum transaction to be processed' : `Get ${toCoin}s by metamask`;
+                    $('#info3').innerHTML = state.toCurrencySent ? 'Please wait for the BSC transaction to be processed' : `Get ${toCoin}s by metamask`;
                 } else {
                     $('#info3').innerHTML = `${toCoin}s have been sent to your address`;
                 }
@@ -729,7 +729,7 @@
                 console.log('accountsChanged', accounts);
                 const address = accounts[0];
                 if (!(new BN(await web3.eth.getBalance(address)).gt(new BN('0')))) {
-                    alert('You need to have ETH on your wallet to pay for gas in the Ethereum network');
+                    alert('You need to have BNB on your wallet to pay for gas in the BSC network');
                     return null;
                 }
                 provider.myEthAddress = address;
@@ -737,7 +737,7 @@
             });
 
             if (ethereum.networkVersion !== ETH_CHAIN_ID.toString()) {
-                alert('Set chain to ' + (ETH_CHAIN_ID === 3 ? 'Ropsten' : 'Mainnet') + ' in Metamask');
+                alert('Set chain to ' + (IS_TESTNET ? 'BSC Testnet' : 'BSC') + ' in Metamask');
                 return null;
             }
 
@@ -751,7 +751,7 @@
             }
 
             if (!(new BN(await web3.eth.getBalance(myEthAddress)).gt(new BN('0')))) {
-                alert('You need to have ETH on your wallet to pay for gas in the Ethereum network');
+                alert('You need to have BNB on your wallet to pay for gas in the BSC network');
                 return null;
             }
 
@@ -971,7 +971,7 @@
 
         if (state.isTonToEth) {
             if (!Web3.utils.isAddress(toAddress)) {
-                alert('Not valid ETH address');
+                alert('Not valid BSC address');
                 return;
             }
         } else {
