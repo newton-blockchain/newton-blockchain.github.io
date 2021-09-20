@@ -382,8 +382,8 @@
     function getSwapTonToEthId(web3, d) {
         return Web3.utils.sha3(
             web3.eth.abi.encodeParameters(
-                ['int', 'address', 'uint256', 'int8', 'bytes32', 'bytes32', 'uint64'],
-                [0xDA7A, d.receiver, d.amount, d.tx.address_.workchain, d.tx.address_.address_hash, d.tx.tx_hash, d.tx.lt]
+                ['int', 'address', 'address', 'uint256', 'int8', 'bytes32', 'bytes32', 'uint64'],
+                [0xDA7A, WTON_ADDRESS, d.receiver, d.amount, d.tx.address_.workchain, d.tx.address_.address_hash, d.tx.tx_hash, d.tx.lt]
             )
         );
     }
