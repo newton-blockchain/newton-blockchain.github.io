@@ -231,7 +231,8 @@
             margin-bottom: 10px;
         }
 
-        #switchButton {
+        .switchButton, .switchButton:hover, .switchButton:after, .switchButton:active, .switchButton:focus{
+            text-decoration: none;
             margin-top: 30px;
             color: #1d98dc;
             cursor: pointer;
@@ -277,7 +278,9 @@
 
     <button id="transferButton">Transfer</button>
 
-    <div id="switchButton" onclick="toggleTonToEth()">Switch direction</div>
+    <div class="switchButton" onclick="toggleTonToEth()">Switch direction</div>
+
+    <a class="switchButton" href="https://ton.org/bridge/bsc">Switch to Binance Smart Chain</a>
 
     <div id="info" style="display: none">
         <div class="info-line">
@@ -299,7 +302,7 @@
 </div>
 
 <div class="footer">
-    v1.18,
+    v1.19,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source
         Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
