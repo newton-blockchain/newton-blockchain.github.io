@@ -278,9 +278,9 @@
 
     <button id="transferButton">Transfer</button>
 
-    <div class="switchButton" onclick="toggleTonToEth()">Switch direction</div>
+    <div id="switchButton" class="switchButton" onclick="toggleTonToEth()">Switch direction</div>
 
-    <a class="switchButton" href="https://ton.org/bridge">Switch to Ethereum</a>
+    <a id="switchButton2" class="switchButton" href="https://ton.org/bridge">Switch to Ethereum</a>
 
     <div id="info" style="display: none">
         <div class="info-line">
@@ -639,6 +639,7 @@
         }
         $('#transferButton').style.display = state.step > 0 ? 'none' : 'block';
         $('#switchButton').style.display = state.step > 0 ? 'none' : 'block';
+        $('#switchButton2').style.display = state.step > 0 ? 'none' : 'block';
         $('#info').style.display = state.step > 0 ? 'block' : 'none';
         $('#cancelButton').style.display = state.isTonToEth && state.step === 1 ? 'block' : 'none';
 
