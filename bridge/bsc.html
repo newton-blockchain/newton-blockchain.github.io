@@ -88,6 +88,17 @@
 
         a.coinLink, a.coinLink:hover, a.coinLink:after, a.coinLink:active, a.coinLink:focus {
             color: #000;
+            border-bottom: 1px dotted #AAA;
+        }
+
+        .coinLinkImgContainer {
+            display: inline-block;
+            height: 16px;
+            width: 16px;
+            background-image: url("link.svg");
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: 0 3px;
         }
 
         .arrow {
@@ -244,7 +255,7 @@
         <div class="arrow" onclick="toggleTonToEth()"></div>
         <div>
             <div class="title" id="toNetwork">Binance Smart Chain</div>
-            <div id="toCoin">TONCOIN (BEP-20)</div>
+            <div id="toCoin">TONCOIN (BEP-20) <div class="coinLinkImgContainer"></div></div>
         </div>
     </div>
     <div class="input-container">
@@ -288,7 +299,7 @@
 </div>
 
 <div class="footer">
-    v1.17,
+    v1.18,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source
         Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
@@ -592,7 +603,7 @@
 
         const fromCoin = state.isTonToEth ? 'TON Coin' : 'TONCOIN';
         const toCoin = !state.isTonToEth ? 'TON Coin' : 'TONCOIN';
-        const coinLink = `<a class="coinLink" href="https://${IS_TESTNET ? 'testnet.' : ''}bscscan.io/token/${WTON_ADDRESS}" target="_blank">TONCOIN (BEP-20)</a>`;
+        const coinLink = `<a class="coinLink" href="https://${IS_TESTNET ? 'testnet.' : ''}bscscan.com/token/${WTON_ADDRESS}" target="_blank">TONCOIN (BEP-20) <div class="coinLinkImgContainer"></div></a>`;
         const fromCoinFull = state.isTonToEth ? 'TON Coin (Native)' : coinLink;
         const toCoinFull = !state.isTonToEth ? 'TON Coin (Native)' : coinLink;
 
