@@ -302,7 +302,7 @@
 </div>
 
 <div class="footer">
-    v1.19,
+    v1.20,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source
         Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
@@ -654,7 +654,7 @@
             if (state.step === 1) {
 
                 if (state.isTonToEth) {
-                    const url = 'ton://transfer/' + TON_BRIDGE_ADDRESS + '?amount=' + toUnit(state.amount) + '&text=swapTo#' + state.toAddress;
+                    const url = 'ton://transfer/' + TON_BRIDGE_ADDRESS + '?amount=' + toUnit(state.amount) + '&text=swapTo%23' + state.toAddress;
                     $('#info1').innerHTML = `Please send ${state.amount} ${fromCoin}s to bridge smart-contract<br>` +
                         `<a href="${url}" target="_blank">${url}</a>`;
                 } else {
