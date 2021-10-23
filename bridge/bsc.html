@@ -302,7 +302,7 @@
 </div>
 
 <div class="footer">
-    v1.20,
+    v1.21,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source
         Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
@@ -971,6 +971,11 @@
     }
 
     $("#transferButton").addEventListener('click', async () => {
+        if (!state.isTonToEth) {
+            alert('Sorry BSC->TON under maintenance until 25 Oct. Thanks for waiting');
+            return;
+        }
+
         const amountString = $('#amountInput').value;
         const amount = Number(amountString);
         if (isNaN(amount)) {
