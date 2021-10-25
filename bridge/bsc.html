@@ -231,7 +231,7 @@
             margin-bottom: 10px;
         }
 
-        .switchButton, .switchButton:hover, .switchButton:after, .switchButton:active, .switchButton:focus{
+        .switchButton, .switchButton:hover, .switchButton:after, .switchButton:active, .switchButton:focus {
             text-decoration: none;
             margin-top: 30px;
             color: #1d98dc;
@@ -256,7 +256,9 @@
         <div class="arrow" onclick="toggleTonToEth()"></div>
         <div>
             <div class="title" id="toNetwork">Binance Smart Chain</div>
-            <div id="toCoin">TONCOIN (BEP-20) <div class="coinLinkImgContainer"></div></div>
+            <div id="toCoin">TONCOIN (BEP-20)
+                <div class="coinLinkImgContainer"></div>
+            </div>
         </div>
     </div>
     <div class="input-container">
@@ -302,7 +304,7 @@
 </div>
 
 <div class="footer">
-    v1.21,
+    v1.22,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source
         Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
@@ -971,11 +973,6 @@
     }
 
     $("#transferButton").addEventListener('click', async () => {
-        if (!state.isTonToEth) {
-            alert('Sorry BSC->TON under maintenance until 25 Oct. Thanks for waiting');
-            return;
-        }
-
         const amountString = $('#amountInput').value;
         const amount = Number(amountString);
         if (isNaN(amount)) {
@@ -988,6 +985,11 @@
         }
 
         const toAddress = $('#toInput').value;
+
+        if (toAddress.toLowerCase() === WTON_ADDRESS.toLowerCase() || toAddress.toLowerCase() === TON_BRIDGE_ADDRESS.toLowerCase()) {
+            alert('Please enter YOUR address to receive');
+            return;
+        }
 
         if (state.isTonToEth) {
             if (!Web3.utils.isAddress(toAddress)) {
