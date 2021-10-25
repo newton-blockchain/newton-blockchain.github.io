@@ -984,6 +984,11 @@
 
         const toAddress = $('#toInput').value;
 
+        if (toAddress.toLowerCase() === WTON_ADDRESS.toLowerCase() || toAddress.toLowerCase() === TON_BRIDGE_ADDRESS.toLowerCase()) {
+            alert('Please enter YOUR address to receive');
+            return;
+        }
+
         if (state.isTonToEth) {
             if (!Web3.utils.isAddress(toAddress)) {
                 alert('Not valid ETH address');
