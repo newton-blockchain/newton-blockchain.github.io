@@ -944,6 +944,38 @@
         "@type": "pub.ed25519",
         "key": "TDg+ILLlRugRB4Kpg3wXjPcoc+d+Eeb7kuVe16CS9z8="
       }
+    },
+    {
+      "ip": 2130706433,
+      "port": 32000,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "rmHwW6/StzuxXtmzpRioSfAgLMGRNcGGO1E/b3MQp7w="
+      }
+    },
+    {
+      "ip": 221617016,
+      "port": 32000,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "MjP2X1QtMcm953d6HhF4nH7LNBK8sB+qTPjhUNbyDx4="
+      }
+    },
+    {
+      "ip": 876764091,
+      "port": 32000,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "n2gqMGSYeIIruNr75bHZ75KZCFjHSZ8T9HPWRDBiKFA="
+      }
+    },
+    {
+      "ip": 917702977,
+      "port": 32000,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "kkVr6xMDVgusHcU0c5duIHaxfam/gqXjdduzLJwfNyc="
+      }
     }
   ],
   "validator": {
