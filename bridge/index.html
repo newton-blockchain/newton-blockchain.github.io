@@ -559,7 +559,7 @@
     }
 
     async function getEthGasPrice() {
-        const data = JSON.parse(await httpGet('https://ethgasstation.info/api/ethgasAPI.json?'));
+        const data = JSON.parse(await httpGet('https://ethereumgas.toncenter.com'));
         const gasPrice = Number(data.average) / 10;
         return gasPrice > 0 ? gasPrice : 25;
     }
