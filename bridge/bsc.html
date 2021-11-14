@@ -350,7 +350,8 @@
     }
 
     const IS_RECOVER = window.location.href.indexOf('recover') > -1;
-
+    const urlParams =  new URLSearchParams(window.location.search);
+    
     const WTON_ADDRESS = IS_TESTNET ? '0xA345a7C8d88279165214f6dA6e857041902955C5' : '0x76A797A59Ba2C17726896976B7B3747BfD1d220f';
     const TON_BRIDGE_ADDRESS = IS_TESTNET ? 'Ef9NXAIQs12t2qIZ-sRZ26D977H65Ol6DQeXc5_gUNaUys5r' : 'Ef9NXAIQs12t2qIZ-sRZ26D977H65Ol6DQeXc5_gUNaUys5r';
     const TON_COLLECTOR_ADDRESS = IS_TESTNET ? 'EQAHI1vGuw7d4WG-CtfDrWqEPNtmUuKjKFEFeJmZaqqfWTvW' : 'EQAHI1vGuw7d4WG-CtfDrWqEPNtmUuKjKFEFeJmZaqqfWTvW';
@@ -442,7 +443,7 @@
 
     async function getSwap(myAmount, myToAddress, myCreateTime) {
         console.log('getTransactions');
-        const transactions = await provider.tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, (IS_RECOVER ? 200 : 40));
+        const transactions = await provider.tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, (IS_RECOVER ? ( urlParams.get("txdepth") ? urlParams.get("txdepth") : 200 ) : 40));
         console.log('ton txs', transactions.length)
 
         const findLogOutMsg = (outMessages) => {
@@ -1020,7 +1021,7 @@
 
         state.amount = amount;
         state.toAddress = toAddress;
-        state.createTime = IS_RECOVER ? 0 : Date.now();
+        state.createTime = IS_RECOVER ? ( urlParams.get("createTime") ? urlParams.get("createTime") : 0 ): Date.now();
         state.step = 1;
         updateView();
 
