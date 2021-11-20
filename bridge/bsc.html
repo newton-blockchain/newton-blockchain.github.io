@@ -304,14 +304,14 @@
 </div>
 
 <div class="footer">
-    v1.22,
+    v1.23,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source
         Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
     <a href="https://github.com/newton-blockchain/TIPs/issues/24" target="_blank">Documentation</a>.
 </div>
 
-<script type="text/javascript" src="tonweb-0.0.13.js"></script>
+<script type="text/javascript" src="tonweb-0.0.23.js"></script>
 <script type="text/javascript" src="web3.min.js"></script>
 <script type="text/javascript" src="ethers-5.0.umd.min.js"></script>
 
@@ -349,6 +349,17 @@
         $('.testnet-warning').style.display = 'block';
     }
 
+    const url = new URL(window.location.href);
+    const LT = url.searchParams.get('lt');
+    const HASH = url.searchParams.get('hash');
+    const URL_AMOUNT = url.searchParams.get('amount');
+    if (URL_AMOUNT) {
+        $('#amountInput').value = URL_AMOUNT / 1e9;
+    }
+    const URL_TO_ADDRESS = url.searchParams.get('toAddress');
+    if(URL_TO_ADDRESS) {
+        $('#toInput').value = URL_TO_ADDRESS;
+    }
     const IS_RECOVER = window.location.href.indexOf('recover') > -1;
 
     const WTON_ADDRESS = IS_TESTNET ? '0xA345a7C8d88279165214f6dA6e857041902955C5' : '0x76A797A59Ba2C17726896976B7B3747BfD1d220f';
@@ -442,7 +453,7 @@
 
     async function getSwap(myAmount, myToAddress, myCreateTime) {
         console.log('getTransactions');
-        const transactions = await provider.tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, (IS_RECOVER ? 200 : 40));
+        const transactions = await provider.tonweb.provider.getTransactions(TON_BRIDGE_ADDRESS, LT && HASH ? 1 : (IS_RECOVER ? 200 : 40), LT, HASH, undefined, LT && HASH ? true : undefined);
         console.log('ton txs', transactions.length)
 
         const findLogOutMsg = (outMessages) => {
@@ -456,7 +467,9 @@
         for (let t of transactions) {
             const logMsg = findLogOutMsg(t.out_msgs);
             if (logMsg) {
-                if (t.utime * 1000 < myCreateTime) continue;
+                if (!IS_RECOVER && !(LT && HASH)) {
+                    if (t.utime * 1000 < myCreateTime) continue;
+                }
 
                 const message = logMsg.message.substr(0, logMsg.message.length - 1); // remove '\n' from end
                 const bytes = TonWeb.utils.base64ToBytes(message);
@@ -1020,7 +1033,7 @@
 
         state.amount = amount;
         state.toAddress = toAddress;
-        state.createTime = IS_RECOVER ? 0 : Date.now();
+        state.createTime = Date.now();
         state.step = 1;
         updateView();
 
