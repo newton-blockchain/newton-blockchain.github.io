@@ -237,6 +237,10 @@
             color: #1d98dc;
             cursor: pointer;
         }
+
+        .send_note {
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
@@ -304,7 +308,7 @@
 </div>
 
 <div class="footer">
-    v1.23,
+    v1.24,
     <a href="https://github.com/newton-blockchain/newton-blockchain.github.io/tree/master/bridge" target="_blank">Source
         Code</a>,
     <a href="https://toncoin.org/how-it-works/bridge" target="_blank">How it works</a>,
@@ -671,7 +675,8 @@
                 if (state.isTonToEth) {
                     const url = 'ton://transfer/' + TON_BRIDGE_ADDRESS + '?amount=' + toUnit(state.amount) + '&text=swapTo%23' + state.toAddress;
                     $('#info1').innerHTML = `Please send ${state.amount} ${fromCoin}s to bridge smart-contract<br>` +
-                        `<a href="${url}" target="_blank">${url}</a>`;
+                        `<a href="${url}" target="_blank">${url}</a>` +
+                    `<div class="send_note">Send from your personal wallet. <b>Do not send directly from exchanges and bots!</b></div>`;
                 } else {
 
                     $('#info1').innerHTML = state.fromCurrencySent ? 'Please wait for the BSC transaction to be processed' : 'Please send BSC transaction in Metamask';
