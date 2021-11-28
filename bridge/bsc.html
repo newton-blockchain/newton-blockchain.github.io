@@ -991,11 +991,6 @@
     }
 
     $("#transferButton").addEventListener('click', async () => {
-        if (!state.isTonToEth) {
-            alert('BSC->TON direction under maintenance until 28 Nov 18:00 UTC');
-            return;
-        }
-
         const amountString = $('#amountInput').value;
         const amount = Number(amountString);
         if (isNaN(amount)) {
