@@ -1024,6 +1024,14 @@
         "@type": "pub.ed25519",
         "key": "LY6QJeIRjZar6/9nPO4v6QQPnjs8ypT8N5top8b3D/E="
       }
+    },
+    {
+      "ip": -1185526007,
+      "port": 4701,
+      "id": {
+        "@type": "pub.ed25519",
+        "key": "G6cNAr6wXBBByWDzddEWP5xMFsAcp6y13fXA8Q7EJlM="
+      }
     }
   ],
   "validator": {
