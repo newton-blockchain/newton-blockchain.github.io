@@ -907,18 +907,18 @@
     },
     {
       "ip": 868465979,
-      "port": 52888,
+      "port": 19434,
       "id": {
         "@type": "pub.ed25519",
-        "key": "MhrcOEIlxMNe34cfb4GMmMl0OoPKe3HSDGl8miK5rRU="
+        "key": "J5CwYXuCZWVPgiFPW+NY2roBwDWpRRtANHSTYTRSVtI="
       }
     },
     {
       "ip": 868466060,
-      "port": 48621,
+      "port": 23067,
       "id": {
         "@type": "pub.ed25519",
-        "key": "z0eg+Dll54aUJFc8WvU8CZP6CUKPqUcra+zJLxti5wU="
+        "key": "vX8d0i31zB0prVuZK8fBkt37WnEpuEHrb7PElk4FJ1o="
       }
     },
     {
