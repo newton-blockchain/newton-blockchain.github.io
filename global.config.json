@@ -333,29 +333,6 @@
           "@type":"dht.node",
           "id":{
              "@type":"pub.ed25519",
-             "key":"39QMN3uUgYxgu67GxapW+T3YAM8N+pU4/AmwM89aH9E="
-          },
-          "addr_list":{
-             "@type":"adnl.addressList",
-             "addrs":[
-                {
-                   "@type":"adnl.address.udp",
-                   "ip":-2134382694,
-                   "port":7651
-                }
-             ],
-             "version":0,
-             "reinit_date":0,
-             "priority":0,
-             "expire_at":0
-          },
-          "version":-1,
-          "signature":"/mSDe4QY5JAmG4WOQDCN3pKHYkGxOZ8g74fYbqDJ2e2UDg38+s1ecC3+n6RfU74sz0KUNYlcHAopu6VrWA7PAg=="
-       },
-       {
-          "@type":"dht.node",
-          "id":{
-             "@type":"pub.ed25519",
              "key":"IHrCooudVGonmudcmTZYk+Pfdsxz2NGws33bHtXnOv8="
           },
           "addr_list":{
