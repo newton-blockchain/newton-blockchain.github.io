@@ -750,7 +750,7 @@
         } else {
             let myEthAddress;
             try {
-                const accounts = (await ethereum.send('eth_requestAccounts')).result;
+                const accounts = await ethereum.request({method: 'eth_requestAccounts'});
                 myEthAddress = accounts[0]
                 console.log('address is', myEthAddress);
             } catch (error) {
@@ -769,7 +769,8 @@
                 console.log('address is', provider.myEthAddress);
             });
 
-            if (ethereum.networkVersion !== ETH_CHAIN_ID.toString()) {
+            const networkVersion = await ethereum.request({ method: 'net_version' });
+            if (networkVersion !== ETH_CHAIN_ID.toString()) {
                 alert('Set chain to ' + (ETH_CHAIN_ID === 3 ? 'Ropsten' : 'Mainnet') + ' in Metamask');
                 return null;
             }
